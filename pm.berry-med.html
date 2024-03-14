@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="./public/css/styles.css" />
+  </head>
+
+  <body>
+    <div class="status-bar-container">
+      <div class="status-text">Bluetooth:</div>
+      <div id="bluetooth-status" class="status-text">Not Connect.</div>
+      <div id="patient" class="status-text"></div>
+    </div>
+    <div class="container">
+      <div class="waveforms-container">
+        <div class="waveform-box">
+          <span class="waveform-title ecg-color">Lead I</span>
+          <canvas class="waveform" id="waveform-ecg" width="1200px"></canvas>
+        </div>
+        <div class="waveform-box">
+          <span class="waveform-title spo2-color">SpO2</span>
+          <canvas class="waveform" id="waveform-spo2" width="1200px"></canvas>
+        </div>
+        <div class="waveform-box">
+          <span class="waveform-title resp-color">RESP</span>
+          <canvas class="waveform" id="waveform-resp" width="1200px"></canvas>
+        </div>
+      </div>
+
+      <div class="parameters-container">
+        <div class="parameter-box">
+          <span class="parameter-title ecg-color">HR(bpm)</span>
+          <span class="parameter-value ecg-color" id="parameter-heart-rate"
+            >- -</span
+          >
+        </div>
+
+        <div class="parameter-box">
+          <span class="parameter-title nibp-color">NIBP(mmHg)</span>
+          <span class="parameter-value nibp-color" id="parameter-nibp"
+            >- - -/- -</span
+          >
+        </div>
+
+        <div class="parameter-box">
+          <div class="parameter-subox">
+            <span class="parameter-title spo2-color">SpO2(%)</span>
+            <span class="parameter-value spo2-color" id="parameter-spo2"
+              >- -</span
+            >
+          </div>
+
+          <div class="parameter-subox">
+            <span class="parameter-title spo2-color">PR(bpm)</span>
+            <span class="parameter-value spo2-color" id="parameter-pulse-rate"
+              >- -</span
+            >
+          </div>
+        </div>
+
+        <div class="parameter-box">
+          <span class="parameter-title temperature-color">Temp(°C)</span>
+          <span
+            class="parameter-value temperature-color"
+            id="parameter-temperature"
+            >- -</span
+          >
+        </div>
+
+        <div class="parameter-box">
+          <span class="parameter-title resp-color">RESP(brpm)</span>
+          <span class="parameter-value resp-color" id="parameter-resp-rate"
+            >- -</span
+          >
+        </div>
+      </div>
+
+      <div class="settings-container">
+        <div class="item-settings-conainer">
+          <img
+            id="bluetoothImage"
+            class="setting-button"
+            src="./public/images/bluetooth.png"
+          />
+        </div>
+        <div class="item-settings-conainer">
+          <img class="setting-button" src="./public/images/nibp.png" />
+          <h5 class="text-Spo2">Nibp</h5>
+        </div>
+        <div class="item-settings-conainer">
+          <img class="setting-button" src="./public/images/spO2.png" />
+          <h5 class="text-Spo2">Spo2</h5>
+        </div>
+        <div class="item-settings-conainer">
+          <img class="setting-button" src="./public/images/Ecg.png" />
+          <h5 class="text-Spo2">Ecg</h5>
+        </div>
+        <div class="item-settings-conainer">
+          <img class="setting-button" src="./public/images/tmp.png" />
+          <h5 class="text-Spo2">Temp</h5>
+        </div>
+        <div class="item-settings-conainer">
+          <button type="button" id="stop">Stop Temperature</button>
+        </div>
+      </div>
+    </div>
+    <script src="./src/bm-waveform.js"></script>
+    <script src="./src/bm-data-parser.js"></script>
+    <script src="./src/bm-patient-monitor.js"></script>
+    <script src="./src/index.js"></script>
+  </body>
+</html>

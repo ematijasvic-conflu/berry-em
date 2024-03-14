@@ -1,0 +1,193 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+
+  overflow-x: hidden;
+  overflow-y: hidden;
+
+  background-color: black;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-bar-container {
+  width: 98%;
+  height: 5%;
+
+  border: 1px solid grey;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.status-text {
+  color: white;
+  font-size: larger;
+  margin: 8px;
+  text-align: center;
+}
+
+.container {
+  width: 98%;
+  height: 93%;
+
+  border: 1px solid grey;
+
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+
+.waveforms-container {
+  width: 80%;
+  height: 100%;
+
+  border-right: 1px solid grey;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.waveform-box {
+  width: 100%;
+  height: 100%;
+
+  border-top: 1px solid grey;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: stretch;
+}
+
+.waveform-title {
+  float: left;
+  margin: 5px;
+
+  font-size: 24px;
+  color: red;
+}
+
+.waveform {
+  width: 100%;
+  height: 80%;
+  margin-bottom: 5px;
+}
+
+.parameters-container {
+  width: 20%;
+  height: 100%;
+
+  border-right: 1px solid grey;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.parameter-box {
+  width: 100%;
+  height: 100%;
+
+  border-top: 1px solid grey;
+
+  display: flex;
+  position: relative;
+  justify-content: stretch;
+}
+
+.parameter-title {
+  float: left;
+  margin: 5px;
+
+  font-size: large;
+}
+
+.parameter-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 5px;
+
+  font-size: 36px;
+}
+
+.parameter-subox {
+  width: 50%;
+  height: 100%;
+
+  display: flex;
+  position: relative;
+  justify-content: stretch;
+}
+
+.settings-container {
+  width: 5%;
+  height: 100%;
+  border-top: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-settings-conainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.setting-button {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  width: 60%;
+  margin-top: 5px;
+}
+
+.setting-button:active {
+  transform: translateY(1px);
+}
+
+.setting-button:hover {
+  opacity: 0.8;
+}
+
+.item-settings-conainer h5 {
+  margin-top: 5px;
+}
+.ecg-color {
+  color: greenyellow;
+}
+
+.nibp-color {
+  color: white;
+}
+
+.spo2-color {
+  color: red;
+}
+
+.resp-color {
+  color: yellow;
+}
+
+.temperature-color {
+  color: white;
+}
+
+.text-Spo2 {
+  color: white;
+}
