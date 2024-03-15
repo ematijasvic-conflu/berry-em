@@ -1,11 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener('resize', fitButtons);
+  fitButtons()
   fillPatientData();
-  const bluetoothImage = document.getElementById("bluetoothImage");
-
-  bluetoothImage.addEventListener("click", () => {
+  document.getElementById("bluetoothImage").addEventListener("click", () => {
     onBtnSearchClick();
   });
+
+  document.getElementById("btnEcg").addEventListener("click", () => {
+    onBtnEcgClick();
+  });
+
+  document.getElementById("btnNibp").addEventListener("click", () => {
+    onBtnNIBPClick();
+  });
+
+  document.getElementById("btnSpo2").addEventListener("click", () => {
+    onBtnSpo2Click();
+  });
+  document.getElementById("btnTemp").addEventListener("click", () => {
+    stopTemperature();
+  });
 });
+
+const fitButtons = () => {
+  let parametersBoxHeigth = document.querySelector(".parameter-box").offsetHeight
+  let btns = Array.from(document.getElementsByClassName("item-settings-conainer"))
+  btns.map(b => { b.style.height = `${parametersBoxHeigth}px` })
+}
 
 const fillPatientData = () => {
   const queryString = window.location.search;
@@ -17,31 +38,23 @@ const fillPatientData = () => {
 };
 
 const descryptData = (data) => {
+  //TODO : Trabajar con url encriptada
   let parts = data.split("-");
-  let dataPatient = `Paciente: ${parts[0]} ${parts[1]} - Edad: ${parts[3]} años - Fecha: ${parts[4]}`;
+  let name = `${parts[0]} ${parts[1]}`
+  let age = parts[2]
+  let date = parts[3]
+  let dataPatient = ''
+  if (name.length > 1) dataPatient += `Paciente: ${name}`
+  if (age > 0) dataPatient += ` - Edad: ${age} años`
+  if (date.length > 0) dataPatient += ` - Fecha: ${date}`
   return dataPatient;
 };
 
 const txBluetoothStatus = document.getElementById("bluetooth-status");
 
-const waveformECG = new BMWaveform(
-  document.getElementById("waveform-ecg"),
-  "red",
-  250,
-  1
-);
-const waveformSpO2 = new BMWaveform(
-  document.getElementById("waveform-spo2"),
-  "red",
-  100,
-  3
-);
-const waveformRESP = new BMWaveform(
-  document.getElementById("waveform-resp"),
-  "yellow",
-  250,
-  3
-);
+const waveformECG = new BMWaveform(document.getElementById("waveform-ecg"), "red", 250, 1);
+const waveformSpO2 = new BMWaveform(document.getElementById("waveform-spo2"), "red", 100, 3);
+const waveformRESP = new BMWaveform(document.getElementById("waveform-resp"), "yellow", 250, 3);
 
 const paramHeartRate = document.getElementById("parameter-heart-rate");
 const paramNIBP = document.getElementById("parameter-nibp");

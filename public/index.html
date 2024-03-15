@@ -7,6 +7,9 @@
 
   <body>
     <div class="status-bar-container">
+      <div class="bluetoothImage" id="bluetoothImage">
+        <img class="setting-button" src="./images/bluetooth.png" />
+      </div>
       <div class="status-text">Bluetooth:</div>
       <div id="bluetooth-status" class="status-text">Not Connect.</div>
       <div id="patient" class="status-text"></div>
@@ -76,32 +79,25 @@
       </div>
 
       <div class="settings-container">
-        <div class="item-settings-conainer">
-          <img
-            id="bluetoothImage"
-            class="setting-button"
-            src="./public/images/bluetooth.png"
-          />
-        </div>
-        <div class="item-settings-conainer">
-          <img class="setting-button" src="./public/images/nibp.png" />
-          <h5 class="text-Spo2">Nibp</h5>
-        </div>
-        <div class="item-settings-conainer">
-          <img class="setting-button" src="./public/images/spO2.png" />
-          <h5 class="text-Spo2">Spo2</h5>
-        </div>
-        <div class="item-settings-conainer">
-          <img class="setting-button" src="./public/images/Ecg.png" />
+        <div id="btnEcg" class="item-settings-conainer">
+          <img class="setting-button" src="./images/Ecg.png" />
           <h5 class="text-Spo2">Ecg</h5>
         </div>
-        <div class="item-settings-conainer">
-          <img class="setting-button" src="./public/images/tmp.png" />
+        <div id="btnNibp" class="item-settings-conainer">
+          <img class="setting-button" src="./images/nibp.png" />
+          <h5 class="text-Spo2">Nibp</h5>
+        </div>
+        <div id="btnSpo2" class="item-settings-conainer">
+          <img class="setting-button" src="./images/spO2.png" />
+          <h5 class="text-Spo2">Spo2</h5>
+        </div>
+        <div id="btnTemp" class="item-settings-conainer">
+          <img class="setting-button" src="./images/tmp.png" />
           <h5 class="text-Spo2">Temp</h5>
         </div>
-        <div class="item-settings-conainer">
+        <!-- <div class="item-settings-conainer">
           <button type="button" id="stop">Stop Temperature</button>
-        </div>
+        </div> -->
       </div>
     </div>
     <script src="../src/bm-waveform.js"></script>

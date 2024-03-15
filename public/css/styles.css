@@ -23,12 +23,35 @@ body {
 
 .status-bar-container {
   width: 98%;
-  height: 5%;
+  /* height: 5%; */
 
   border: 1px solid grey;
 
   display: flex;
   flex-direction: row;
+}
+
+.bluetoothImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.bluetoothImage:active {
+  transform: translateY(1px);
+}
+
+.bluetoothImage:hover {
+  opacity: 0.8;
+  background-color: rgba(104, 107, 109, 0.169);
+}
+
+.bluetoothImage img {
+  height: 40px;
+  width: 40px;
 }
 
 .status-text {
@@ -111,7 +134,7 @@ body {
 .parameter-title {
   float: left;
   margin: 5px;
-
+  display: block;
   font-size: large;
 }
 
@@ -121,7 +144,6 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 5px;
-
   font-size: 36px;
 }
 
@@ -141,28 +163,29 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .item-settings-conainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.setting-button {
-  cursor: pointer;
+  justify-content: center;
   transition: opacity 0.3s ease;
-  width: 60%;
-  margin-top: 5px;
+  cursor: pointer;
 }
 
-.setting-button:active {
+.item-settings-conainer:active {
   transform: translateY(1px);
 }
 
-.setting-button:hover {
+.item-settings-conainer:hover {
   opacity: 0.8;
+  background-color: rgba(104, 107, 109, 0.169);
+}
+
+.setting-button {
+  width: 60%;
 }
 
 .item-settings-conainer h5 {
