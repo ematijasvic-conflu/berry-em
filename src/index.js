@@ -40,11 +40,11 @@ const fillPatientData = () => {
 const descryptData = (data) => {
   //TODO : Trabajar con url encriptada
   let parts = data.split("-");
-  let name = `${parts[0]} ${parts[1]}`
-  let age = parts[2]
-  let date = parts[3]
+  let name = parts[0]
+  let age = parts[1]
+  let date = parts[2]
   let dataPatient = ''
-  if (name.length > 1) dataPatient += `Paciente: ${name}`
+  if (name.length > 0) dataPatient += `Paciente: ${name}`
   if (age > 0) dataPatient += ` - Edad: ${age} años`
   if (date.length > 0) dataPatient += ` - Fecha: ${date}`
   return dataPatient;
