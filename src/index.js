@@ -234,114 +234,114 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function saveEcg() {
-    console.log("HeartRateValue", heartRateValue);
-    console.log("RespRateValue", respRateValue);
+    // console.log("HeartRateValue", heartRateValue);
+    // console.log("RespRateValue", respRateValue);
 
-    let values = {
-      EcgHeartRate: heartRateValue,
-      EcgRespRate: respRateValue,
-    };
+    // let values = {
+    //   EcgHeartRate: heartRateValue,
+    //   EcgRespRate: respRateValue,
+    // };
 
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
-    headers.append("Accept", "application/json");
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Accept", "application/json");
 
-    //http://localhost:8080/BerryJavaPostgreSQL/rest/EcgCreate
+    // //http://localhost:8080/BerryJavaPostgreSQL/rest/EcgCreate
 
-    fetch("http://localhost:8080/GuardiaJava/rest/EcgCreate", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => console.log(json))
-      .catch((err) => console.log(err));
+    // fetch("http://localhost:8080/GuardiaJava/rest/EcgCreate", {
+    //   method: "POST",
+    //   body: JSON.stringify(values),
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => console.log(json))
+    //   .catch((err) => console.log(err));
   }
 
   function saveNibp() {
-    console.log("SysValue", sysValue);
-    console.log("DiaValue", diaValue);
+    // console.log("SysValue", sysValue);
+    // console.log("DiaValue", diaValue);
 
-    let values = {
-      NibpSys: sysValue,
-      NibpDia: diaValue,
-    };
+    // let values = {
+    //   NibpSys: sysValue,
+    //   NibpDia: diaValue,
+    // };
 
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
-    headers.append("Accept", "application/json");
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Accept", "application/json");
 
-    //http://localhost:8080/BerryJavaPostgreSQL/rest/NibpCreate
+    // //http://localhost:8080/BerryJavaPostgreSQL/rest/NibpCreate
 
-    //http://localhost:8080/GuardiaJava/rest/NibpCreate
+    // //http://localhost:8080/GuardiaJava/rest/NibpCreate
 
-    fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/NibpCreate", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => console.log(json))
-      .catch((err) => console.log(err));
+    // fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/NibpCreate", {
+    //   method: "POST",
+    //   body: JSON.stringify(values),
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => console.log(json))
+    //   .catch((err) => console.log(err));
   }
 
   function saveSpo2() {
-    console.log("Spo2Value", spo2Value);
-    console.log("PulseRateValue", pulseRateValue);
+    // console.log("Spo2Value", spo2Value);
+    // console.log("PulseRateValue", pulseRateValue);
 
-    let values = {
-      Spo2Spo2: spo2Value,
-      Spo2PulseRate: pulseRateValue,
-    };
+    // let values = {
+    //   Spo2Spo2: spo2Value,
+    //   Spo2PulseRate: pulseRateValue,
+    // };
 
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
-    headers.append("Accept", "application/json");
-    //headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-    /*headers.append('Access-Control-Allow-Origin', '*');
-      
-      headers.append('Access-Control-Allow-Headers', 'Content-Type');*/
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Accept", "application/json");
+    // //headers.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+    // /*headers.append('Access-Control-Allow-Origin', '*');
 
-    //http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2Create
+    //   headers.append('Access-Control-Allow-Headers', 'Content-Type');*/
 
-    //http://localhost:8080/GuardiaJava/rest/Spo2Create
+    // //http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2Create
 
-    fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2Create", {
-      method: "POST",
-      body: JSON.stringify(values),
-      // mode: 'no-cors',
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => console.log(json))
-      .catch((err) => console.log(err));
+    // //http://localhost:8080/GuardiaJava/rest/Spo2Create
+
+    // fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2Create", {
+    //   method: "POST",
+    //   body: JSON.stringify(values),
+    //   // mode: 'no-cors',
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => console.log(json))
+    //   .catch((err) => console.log(err));
   }
 
   function saveTemperature() {
-    console.log("TemperatureValue", temperatureValue);
+    // console.log("TemperatureValue", temperatureValue);
 
-    let values = {
-      TemperatureTemperature: temperatureValue,
-    };
+    // let values = {
+    //   TemperatureTemperature: temperatureValue,
+    // };
 
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
-    headers.append("Accept", "application/json");
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Accept", "application/json");
 
-    //http://localhost:8080/BerryJavaPostgreSQL/rest/TemperatureCreate
+    // //http://localhost:8080/BerryJavaPostgreSQL/rest/TemperatureCreate
 
-    fetch("http://localhost:8080/GuardiaJava/rest/TemperatureCreate", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => console.log(json))
-      .catch((err) => console.log(err));
+    // fetch("http://localhost:8080/GuardiaJava/rest/TemperatureCreate", {
+    //   method: "POST",
+    //   body: JSON.stringify(values),
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => console.log(json))
+    //   .catch((err) => console.log(err));
   }
 
   function refreshBluetoothStatus(status) {
@@ -367,124 +367,124 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function onBtnSpo2Image() {
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
+    // headers.append("Content-Type", "application/json");
 
-    fetch("http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2Obtener", {
-      method: "POST",
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => {
-        console.log(json);
-        var image = new Image();
-        image.src = json.imageSpo2;
-        document.getElementById("imageSpo2").innerHTML = image;
-      })
-      .catch((err) => console.log(err));
+    // fetch("http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2Obtener", {
+    //   method: "POST",
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => {
+    //     console.log(json);
+    //     var image = new Image();
+    //     image.src = json.imageSpo2;
+    //     document.getElementById("imageSpo2").innerHTML = image;
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   async function saveSpo2Image() {
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
-    headers.append("Access-Control-Allow-Origin", "*");
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Access-Control-Allow-Origin", "*");
 
-    console.log("array", waveformSpO2.measurementArray);
-    console.log("array length", waveformSpO2.measurementArray.length);
+    // console.log("array", waveformSpO2.measurementArray);
+    // console.log("array length", waveformSpO2.measurementArray.length);
 
-    console.log("array copia", [...waveformSpO2.measurementArray]); // Hace una copia del array antes de imprimirlo
-    console.log("array lenght", waveformSpO2.measurementArray.length);
+    // console.log("array copia", [...waveformSpO2.measurementArray]); // Hace una copia del array antes de imprimirlo
+    // console.log("array lenght", waveformSpO2.measurementArray.length);
 
-    var arrayBase64 = waveformSpO2.measurementArray;
+    // var arrayBase64 = waveformSpO2.measurementArray;
 
-    //var totalImage = await saveImageBase64(arrayBase64);
-    var totalImage = await waveformSpO2.saveImageBase64(arrayBase64);
+    // //var totalImage = await saveImageBase64(arrayBase64);
+    // var totalImage = await waveformSpO2.saveImageBase64(arrayBase64);
 
-    console.log("total image", totalImage);
+    // console.log("total image", totalImage);
 
-    let values = {
-      spo2Image: totalImage,
-    };
+    // let values = {
+    //   spo2Image: totalImage,
+    // };
 
-    console.log("image converted", values.spo2Image);
+    // console.log("image converted", values.spo2Image);
 
-    // http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2GraphicsCreate
-    //http://localhost:8080/GuardiaJava/rest/Spo2GraphicsCreate
+    // // http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2GraphicsCreate
+    // //http://localhost:8080/GuardiaJava/rest/Spo2GraphicsCreate
 
-    fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2GraphicsCreate", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => console.log(json))
-      .catch((err) => console.log(err));
+    // fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2GraphicsCreate", {
+    //   method: "POST",
+    //   body: JSON.stringify(values),
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => console.log(json))
+    //   .catch((err) => console.log(err));
   }
 
   async function saveEcgImage() {
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
-    headers.append("Access-Control-Allow-Origin", "*");
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Access-Control-Allow-Origin", "*");
 
-    console.log("array", waveformECG.measurementArray);
+    // console.log("array", waveformECG.measurementArray);
 
-    var arrayBase64 = waveformECG.measurementArray;
+    // var arrayBase64 = waveformECG.measurementArray;
 
-    var totalImage = await waveformECG.saveImageBase64(arrayBase64);
+    // var totalImage = await waveformECG.saveImageBase64(arrayBase64);
 
-    console.log("total image", totalImage);
+    // console.log("total image", totalImage);
 
-    let values = {
-      ecgImage: totalImage,
-    };
+    // let values = {
+    //   ecgImage: totalImage,
+    // };
 
-    console.log("image converted", values.ecgImage);
+    // console.log("image converted", values.ecgImage);
 
-    //http://localhost:8080/BerryJavaPostgreSQL/rest/EcgGraphicsCreate
+    // //http://localhost:8080/BerryJavaPostgreSQL/rest/EcgGraphicsCreate
 
-    fetch("http://localhost:8080/GuardiaJava/rest/EcgGraphicsCreate", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => console.log(json))
-      .catch((err) => console.log(err));
+    // fetch("http://localhost:8080/GuardiaJava/rest/EcgGraphicsCreate", {
+    //   method: "POST",
+    //   body: JSON.stringify(values),
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => console.log(json))
+    //   .catch((err) => console.log(err));
   }
 
   async function saveRespImage() {
-    let headers = new Headers();
+    // let headers = new Headers();
 
-    headers.append("Content-Type", "application/json");
-    headers.append("Access-Control-Allow-Origin", "*");
+    // headers.append("Content-Type", "application/json");
+    // headers.append("Access-Control-Allow-Origin", "*");
 
-    console.log("array", waveformRESP.measurementArray);
+    // console.log("array", waveformRESP.measurementArray);
 
-    var arrayBase64 = waveformRESP.measurementArray;
+    // var arrayBase64 = waveformRESP.measurementArray;
 
-    var totalImage = await waveformRESP.saveImageBase64(arrayBase64);
+    // var totalImage = await waveformRESP.saveImageBase64(arrayBase64);
 
-    console.log("total image", totalImage);
+    // console.log("total image", totalImage);
 
-    let values = {
-      respImage: totalImage,
-    };
+    // let values = {
+    //   respImage: totalImage,
+    // };
 
-    console.log("image converted", values.respImage);
+    // console.log("image converted", values.respImage);
 
-    //http://localhost:8080/BerryJavaPostgreSQL/rest/RespGraphicsCreate
+    // //http://localhost:8080/BerryJavaPostgreSQL/rest/RespGraphicsCreate
 
-    fetch("http://localhost:8080/GuardiaJava/rest/RespGraphicsCreate", {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: headers,
-    })
-      .then((response) => response)
-      .then((json) => console.log(json))
-      .catch((err) => console.log(err));
+    // fetch("http://localhost:8080/GuardiaJava/rest/RespGraphicsCreate", {
+    //   method: "POST",
+    //   body: JSON.stringify(values),
+    //   headers: headers,
+    // })
+    //   .then((response) => response)
+    //   .then((json) => console.log(json))
+    //   .catch((err) => console.log(err));
   }
 
   async function mergeArrayBase64(measureArray = new Array()) {
