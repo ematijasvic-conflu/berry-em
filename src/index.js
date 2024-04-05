@@ -20,6 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnTemp").addEventListener("click", () => {
     stopTemperature();
   });
+  const txBluetoothStatus = document.getElementById("bluetooth-status");
+
+  const waveformECG = new BMWaveform(document.getElementById("waveform-ecg"), "red", 250, 1);
+  const waveformSpO2 = new BMWaveform(document.getElementById("waveform-spo2"), "red", 100, 3);
+  const waveformRESP = new BMWaveform(document.getElementById("waveform-resp"), "yellow", 250, 3);
+
 });
 
 const fitButtons = () => {
@@ -50,11 +56,11 @@ const descryptData = (data) => {
   return dataPatient;
 };
 
-const txBluetoothStatus = document.getElementById("bluetooth-status");
+// const txBluetoothStatus = document.getElementById("bluetooth-status");
 
-const waveformECG = new BMWaveform(document.getElementById("waveform-ecg"), "red", 250, 1);
-const waveformSpO2 = new BMWaveform(document.getElementById("waveform-spo2"), "red", 100, 3);
-const waveformRESP = new BMWaveform(document.getElementById("waveform-resp"), "yellow", 250, 3);
+// const waveformECG = new BMWaveform(document.getElementById("waveform-ecg"), "red", 250, 1);
+// const waveformSpO2 = new BMWaveform(document.getElementById("waveform-spo2"), "red", 100, 3);
+// const waveformRESP = new BMWaveform(document.getElementById("waveform-resp"), "yellow", 250, 3);
 
 const paramHeartRate = document.getElementById("parameter-heart-rate");
 const paramNIBP = document.getElementById("parameter-nibp");
