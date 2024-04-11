@@ -61,6 +61,14 @@ body {
   text-align: center;
 }
 
+.error-text {
+  color: rgb(255, 208, 0);
+  font-size: larger;
+  margin: 12px;
+  text-align: right;
+  display: none;
+}
+
 .container {
   width: 98%;
   height: 93%;
@@ -166,20 +174,24 @@ body {
   justify-content: flex-start;
 }
 
-.item-settings-conainer {
+.item-settings-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   transition: opacity 0.3s ease;
   cursor: pointer;
+  /* background: linear-gradient(#ffffff, #ffffff); Definir un gradiente blanco */
+  transition: background-position 30s linear; /* Transición de posición durante 30 segundos */
+  background-size: 100% 200%; /* Tamaño del gradiente: 100% de ancho, 200% de alto */
+  background-position: 0% 0%; /* Iniciar el gradiente desde la parte superior */
 }
 
-.item-settings-conainer:active {
+.item-settings-container:active {
   transform: translateY(1px);
 }
 
-.item-settings-conainer:hover {
+.item-settings-container:hover {
   opacity: 0.8;
   background-color: rgba(104, 107, 109, 0.169);
 }
@@ -188,7 +200,7 @@ body {
   width: 60%;
 }
 
-.item-settings-conainer h5 {
+.item-settings-container h5 {
   margin-top: 5px;
 }
 .ecg-color {

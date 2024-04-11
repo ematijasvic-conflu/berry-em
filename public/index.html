@@ -3,16 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="./css/styles.css" />
+    <!-- <script type="module" src="../src/index.js"></script> -->
   </head>
 
   <body>
     <div class="status-bar-container">
-      <div class="bluetoothImage" id="bluetoothImage">
+      <div class="bluetoothImage" id="bluetoothImage" onclick="onBtnSearchClick()">
         <img class="setting-button" src="./images/bluetooth.png" />
       </div>
       <div class="status-text">Bluetooth:</div>
       <div id="bluetooth-status" class="status-text">Not Connect.</div>
       <div id="patient" class="status-text"></div>
+      <p id="error-text" class="error-text" >error: porfavor intente de nuevo</p>
     </div>
     <div class="container">
       <div class="waveforms-container">
@@ -79,23 +81,23 @@
       </div>
 
       <div class="settings-container">
-        <div id="btnEcg" class="item-settings-conainer">
+        <div id="btnEcg" class="item-settings-container">
           <img class="setting-button" src="./images/Ecg.png" />
           <h5 class="text-Spo2">Ecg</h5>
         </div>
-        <div id="btnNibp" class="item-settings-conainer">
+        <div id="btnNibp" class="item-settings-container">
           <img class="setting-button" src="./images/nibp.png" />
           <h5 class="text-Spo2">Nibp</h5>
         </div>
-        <div id="btnSpo2" class="item-settings-conainer">
+        <div id="btnSpo2" class="item-settings-container">
           <img class="setting-button" src="./images/spO2.png" />
           <h5 class="text-Spo2">Spo2</h5>
         </div>
-        <div id="btnTemp" class="item-settings-conainer">
-          <img id="stop" class="setting-button" src="./images/tmp.png" />
+        <div id="btnTemp" class="item-settings-container">
+          <img class="setting-button" src="./images/tmp.png" />
           <h5 class="text-Spo2">Temp</h5>
         </div>
-        <!-- <div class="item-settings-conainer">
+        <!-- <div class="item-settings-container">
           <button type="button" id="stop">Stop Temperature</button>
         </div> -->
       </div>
@@ -104,5 +106,6 @@
     <script src="../src/bm-data-parser.js"></script>
     <script src="../src/bm-patient-monitor.js"></script>
     <script src="../src/index.js"></script>
+    
   </body>
 </html>

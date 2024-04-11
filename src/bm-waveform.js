@@ -1,4 +1,4 @@
-class BMWaveform {
+ class BMWaveform {
   constructor(canvas, color, maxValue, step) {
     this.canvas = canvas;
     this.color = color;
