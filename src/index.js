@@ -61,7 +61,14 @@ dataParser.registerCallback("on_resp_waveform_received", (amp) => {
   }
 });
 
+let counterTemperature = null;
+
+function onBtnSearchClick() {
+  patientMonitor.connect();
+}
+
 function onBtnEcgClick() {
+  let ecgMeasureTime = getActualTime()
   setGreenBtn("btnEcg")
   let counterEcg = 0;
   let saveEcgDataExecuted = false;
@@ -76,7 +83,7 @@ function onBtnEcgClick() {
       paramHeartRate.innerHTML = heartRate === 0 ? "- -" : heartRate;
       paramRespRate.innerHTML = heartRate === 0 ? "- -" : respRate;
       if (counterEcg < 30 && heartRate !== 0 && respRate !== 0) {
-        saveEcg();
+        saveEcg(ecgMeasureTime);
         counterEcg++;
         console.log("countEcg", counterEcg);
         saveEcgDataExecuted = true;
@@ -84,8 +91,8 @@ function onBtnEcgClick() {
 
       if (counterEcg === 30 && saveEcgDataExecuted) {
         setTimeout(async function () {
-          await saveEcgImage();
-          await saveRespImage();
+          await saveEcgImage(ecgMeasureTime);
+          await saveRespImage(ecgMeasureTime);
           saveEcgDataExecuted = false;
         }, 5000);
       }
@@ -93,68 +100,8 @@ function onBtnEcgClick() {
   );
 }
 
-function onBtnSpo2Click() {
-  setGreenBtn("btnSpo2")
-  let saveSpo2DataExecuted = false;
-  spo2StartArray = false;
-
-  dataParser.registerCallback(
-    "on_spo2_params_received",
-    async (states, spo2, pulseRate) => {
-      spo2Value = spo2;
-      pulseRateValue = pulseRate;
-      paramSpO2.innerHTML = spo2 === 127 ? "- -" : spo2;
-      paramPulseRate.innerHTML = pulseRate === 255 ? "- -" : pulseRate;
-
-      if (counterSpo2 <= 30 && spo2 !== 127 && pulseRate !== 255) {
-        saveSpo2();
-        counterSpo2++;
-        console.log("counter spo2", counterSpo2);
-
-        saveSpo2DataExecuted = true;
-      }
-
-      if (counterSpo2 === 30) {
-        setTimeout(async function () {
-          await saveSpo2Image();
-          saveSpo2DataExecuted = false;
-        }, 5000);
-      }
-    }
-  );
-}
-
-let counterTemperature = null;
-
-document.getElementById("btnTemp").addEventListener("click", stopTemperature);
-
-function onBtnTemperatureClick() {
-  setGreenBtn("btnTemp")
-  setTimeout(stopTemperature, 30000);
-  dataParser.registerCallback(
-    "on_temp_params_received",
-    (states, temperature) => {
-      console.log("Temp(°C)", temperature);
-      temperatureValue = temperature;
-      paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
-      if (!counterTemperature && temperature !== 0) {
-        counterTemperature = setInterval(saveTemperature, 1000);
-      }
-    }
-  );
-}
-
-function stopTemperature() {
-  clearInterval(counterTemperature);
-}
-
-setInterval(updateWaveforms, 40);
-
-function onBtnSearchClick() {
-  patientMonitor.connect();
-}
-
 function onBtnNIBPClick() {
+  nibpMeasureTime = getActualTime()
   setGreenBtn("btnNibp")
   patientMonitor.startNIBP();
 
@@ -171,30 +118,78 @@ function onBtnNIBPClick() {
         sys === 0 || dia === 0 ? "- - -/- -" : sys + "/" + dia;
 
       if (sys !== 0 && dia !== 0 && !saveNibpDataExecuted) {
-        saveNibp();
+        saveNibp(nibpMeasureTime);
         saveNibpDataExecuted = true;
       }
     }
   );
 }
 
-function saveEcg() {
-  console.log("HeartRateValue", heartRateValue);
-  console.log("RespRateValue", respRateValue);
+function onBtnSpo2Click() {
+  setGreenBtn("btnSpo2")
+  let spo2MeasureTime = getActualTime()
+  let saveSpo2DataExecuted = false;
+  spo2StartArray = false;
 
+  dataParser.registerCallback(
+    "on_spo2_params_received",
+    async (states, spo2, pulseRate) => {
+      spo2Value = spo2;
+      pulseRateValue = pulseRate;
+      paramSpO2.innerHTML = spo2 === 127 ? "- -" : spo2;
+      paramPulseRate.innerHTML = pulseRate === 255 ? "- -" : pulseRate;
+
+      if (counterSpo2 <= 30 && spo2 !== 127 && pulseRate !== 255) {
+        saveSpo2(spo2MeasureTime);
+        counterSpo2++;
+        console.log("counter spo2", counterSpo2);
+
+        saveSpo2DataExecuted = true;
+      }
+
+      if (counterSpo2 === 30) {
+        setTimeout(async function () {
+          await saveSpo2Image(spo2MeasureTime);
+          saveSpo2DataExecuted = false;
+        }, 5000);
+      }
+    }
+  );
+}
+
+function onBtnTemperatureClick() {
+  setGreenBtn("btnTemp")
+  setTimeout(stopTemperature, 31000);
+  let tempMeasureTime = getActualTime()
+  dataParser.registerCallback(
+    "on_temp_params_received",
+    (states, temperature) => {
+      console.log("Temp(°C)", temperature);
+      temperatureValue = temperature;
+      paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
+      if (!counterTemperature && temperature !== 0) {
+        counterTemperature = setInterval(() => saveTemperature(tempMeasureTime), 1000);
+      }
+    }
+  );
+}
+
+setInterval(updateWaveforms, 40);
+
+function saveEcg(ecgMeasureTime) {
   let values = {
     EcgHeartRate: heartRateValue,
     EcgRespRate: respRateValue,
+    medicionTime: ecgMeasureTime,
+    ConsultaId: parseInt(consultaId),
+    PacienteId: parseInt(pacienteId)
   };
 
   let headers = new Headers();
-
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
 
-  //http://localhost:8080/BerryJavaPostgreSQL/rest/EcgCreate
-
-  fetch("http://localhost:8080/GuardiaJava/rest/EcgCreate", {
+  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/EcgCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -203,24 +198,86 @@ function saveEcg() {
     .then((json) => console.log(json))
     .catch((err) => console.log(err));
 }
+async function saveEcgImage(ecgMeasureTime) {
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Access-Control-Allow-Origin", "*");
 
-function saveNibp() {
-  console.log("SysValue", sysValue);
-  console.log("DiaValue", diaValue);
+  console.log("array", waveformECG.measurementArray);
+  var arrayBase64 = waveformECG.measurementArray;
+  var totalImage = await waveformECG.saveImageBase64(arrayBase64);
 
+  console.log("total image", totalImage);
+
+  let values = {
+    ecgImage: totalImage,
+    medicionTime: ecgMeasureTime,
+    ConsultaId: parseInt(consultaId),
+    PacienteId: parseInt(pacienteId)
+  };
+  console.log("image converted", values.ecgImage);
+
+  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/EcgGraphicsCreate", {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: headers,
+  })
+  .then(response => response.json()) // Parsea la respuesta como JSON
+  .then(data => {
+    console.log('Respuesta del servidor:', data);
+    if (data.error) {
+      document.getElementById("error-text").style.display = "block";
+    } else {
+      document.getElementById("error-text").style.display = "none";
+    }
+  })
+  .catch(err => console.log('Error al enviar solicitud:', err));
+}
+async function saveRespImage(ecgMeasureTime) {
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Access-Control-Allow-Origin", "*");
+  var arrayBase64 = waveformRESP.measurementArray;
+  var totalImage = await waveformRESP.saveImageBase64(arrayBase64);
+  console.log("total image", totalImage);
+
+  let values = {
+    respImage: totalImage,
+    medicionTime: ecgMeasureTime,
+    ConsultaId: parseInt(consultaId),
+    PacienteId: parseInt(pacienteId)
+  };
+  console.log("image converted", values.respImage);
+
+  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/RespGraphicsCreate", {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: headers,
+  })
+  .then(response => response.json()) // Parsea la respuesta como JSON
+  .then(data => {
+    console.log('Respuesta del servidor:', data);
+    if (data.error) {
+      document.getElementById("error-text").style.display = "block";
+    } else {
+      document.getElementById("error-text").style.display = "none";
+    }
+  })
+  .catch(err => console.log('Error al enviar solicitud:', err));
+}
+
+function saveNibp(nibpMeasureTime) {
   let values = {
     NibpSys: sysValue,
     NibpDia: diaValue,
+    medicionTime: nibpMeasureTime,
+    ConsultaId: parseInt(consultaId),
+    PacienteId: parseInt(pacienteId)
   };
 
   let headers = new Headers();
-
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
-
-  //http://localhost:8080/BerryJavaPostgreSQL/rest/NibpCreate
-
-  //http://localhost:8080/GuardiaJava/rest/NibpCreate
 
   fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/NibpCreate", {
     method: "POST",
@@ -232,15 +289,14 @@ function saveNibp() {
     .catch((err) => console.log(err));
 }
 
-function saveSpo2() {
+function saveSpo2(measureTime) {
   let values =  {
     Spo2Spo2: spo2Value.toString(),
     Spo2PulseRate: pulseRateValue.toString(),
+    medicionTime: measureTime,
     ConsultaId: parseInt(consultaId),
     PacienteId: parseInt(pacienteId)
   };
-  // let values = `{"Spo2Spo2": "${spo2Value}","Spo2PulseRate": "${pulseRateValue}","PacienteId": ${pacienteId},"ConsultaId":${consultaId} }`
-  console.log(values);
 
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
@@ -249,8 +305,6 @@ function saveSpo2() {
   fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2Create", {
     method: "POST",
     body: JSON.stringify(values),
-    // body: values,
-    //mode: 'no-cors',
     headers: headers
   })
   .then(response => response.json()) // Parsea la respuesta como JSON
@@ -263,26 +317,33 @@ function saveSpo2() {
     }
   })
   .catch(err => console.log('Error al enviar solicitud:', err));
-
 }
+async function saveSpo2Image(spo2MeasureTime) {
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Access-Control-Allow-Origin", "*");
+  
+  console.log("array", waveformSpO2.measurementArray);
+  console.log("array length", waveformSpO2.measurementArray.length);
+  console.log("array copia", [...waveformSpO2.measurementArray]); // Hace una copia del array antes de imprimirlo
+  console.log("array lenght", waveformSpO2.measurementArray.length);
 
-function saveTemperature() {
-  console.log("TemperatureValue", temperatureValue);
+  var arrayBase64 = waveformSpO2.measurementArray;
+  //var totalImage = await saveImageBase64(arrayBase64);
+  var totalImage = await waveformSpO2.saveImageBase64(arrayBase64);
+
+  console.log("total image", totalImage);
 
   let values = {
-    TemperatureTemperature: temperatureValue,
+    spo2Image: totalImage,
+    medicionTime: spo2MeasureTime,
     ConsultaId: parseInt(consultaId),
     PacienteId: parseInt(pacienteId)
   };
 
-  let headers = new Headers();
+  console.log("image converted", values.spo2Image);
 
-  headers.append("Content-Type", "application/json");
-  headers.append("Accept", "application/json");
-
-  //http://localhost:8080/BerryJavaPostgreSQL/rest/TemperatureCreate
-
-  fetch("http://localhost:8080/GuardiaJava/rest/TemperatureCreate", {
+  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2GraphicsCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -297,34 +358,7 @@ function saveTemperature() {
     }
   })
   .catch(err => console.log('Error al enviar solicitud:', err));
-    // .then((response) => response)
-    // .then((json) => console.log(json))
-    // .catch((err) => console.log(err));
 }
-
-function refreshBluetoothStatus(status) {
-  txBluetoothStatus.innerHTML = status;
-}
-
-function updateWaveforms() {
- 
-  if (document.hidden) {
-    for (let waveform of waveforms) {
-      waveform["waveform"].addArray(
-        waveform["buffer"].splice(0, waveform["buffer"].length)
-      );
-    }
-  } else {
-    for (let waveform of waveforms) {
-      if (waveform["buffer"].length > waveform["slice_size"]) {
-        waveform["waveform"].addArray(
-          waveform["buffer"].splice(0, waveform["slice_size"])
-        );
-      }
-    }
-  }
-}
-
 
 function onBtnSpo2Image() {
   let headers = new Headers();
@@ -345,37 +379,20 @@ function onBtnSpo2Image() {
     .catch((err) => console.log(err));
 }
 
-async function saveSpo2Image() {
-  let headers = new Headers();
-
-  headers.append("Content-Type", "application/json");
-  headers.append("Access-Control-Allow-Origin", "*");
-
-  console.log("array", waveformSpO2.measurementArray);
-  console.log("array length", waveformSpO2.measurementArray.length);
-
-  console.log("array copia", [...waveformSpO2.measurementArray]); // Hace una copia del array antes de imprimirlo
-  console.log("array lenght", waveformSpO2.measurementArray.length);
-
-  var arrayBase64 = waveformSpO2.measurementArray;
-
-  //var totalImage = await saveImageBase64(arrayBase64);
-  var totalImage = await waveformSpO2.saveImageBase64(arrayBase64);
-
-  console.log("total image", totalImage);
-
+function saveTemperature(measureTime) {
   let values = {
-    spo2Image: totalImage,
+    temp: temperatureValue,
+    medicionTime: measureTime,
     ConsultaId: parseInt(consultaId),
     PacienteId: parseInt(pacienteId)
   };
+  console.log("TemperatureValue", values);
 
-  console.log("image converted", values.spo2Image);
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Accept", "application/json");
 
-  // http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2GraphicsCreate
-  //http://localhost:8080/GuardiaJava/rest/Spo2GraphicsCreate
-
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2GraphicsCreate", {
+  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/TemperatureCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -390,99 +407,32 @@ async function saveSpo2Image() {
     }
   })
   .catch(err => console.log('Error al enviar solicitud:', err));
-    // .then((response) => response)
-    // .then((json) => console.log(json))
-    // .catch((err) => console.log(err));
+}
+function stopTemperature() {
+  clearInterval(counterTemperature);
 }
 
-async function saveEcgImage() {
-  let headers = new Headers();
-
-  headers.append("Content-Type", "application/json");
-  headers.append("Access-Control-Allow-Origin", "*");
-
-  console.log("array", waveformECG.measurementArray);
-
-  var arrayBase64 = waveformECG.measurementArray;
-
-  var totalImage = await waveformECG.saveImageBase64(arrayBase64);
-
-  console.log("total image", totalImage);
-
-  let values = {
-    ecgImage: totalImage,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
-  };
-
-  console.log("image converted", values.ecgImage);
-
-  //http://localhost:8080/BerryJavaPostgreSQL/rest/EcgGraphicsCreate
-
-  fetch("http://localhost:8080/GuardiaJava/rest/EcgGraphicsCreate", {
-    method: "POST",
-    body: JSON.stringify(values),
-    headers: headers,
-  })
-  .then(response => response.json()) // Parsea la respuesta como JSON
-  .then(data => {
-    console.log('Respuesta del servidor:', data);
-    if (data.error) {
-      document.getElementById("error-text").style.display = "block";
-    } else {
-      document.getElementById("error-text").style.display = "none";
+function refreshBluetoothStatus(status) {
+  txBluetoothStatus.innerHTML = status;
+}
+function updateWaveforms() {
+ 
+  if (document.hidden) {
+    for (let waveform of waveforms) {
+      waveform["waveform"].addArray(
+        waveform["buffer"].splice(0, waveform["buffer"].length)
+      );
     }
-  })
-  .catch(err => console.log('Error al enviar solicitud:', err));
-    // .then((response) => response)
-    // .then((json) => console.log(json))
-    // .catch((err) => console.log(err));
-}
-
-async function saveRespImage() {
-  let headers = new Headers();
-
-  headers.append("Content-Type", "application/json");
-  headers.append("Access-Control-Allow-Origin", "*");
-
-  console.log("array", waveformRESP.measurementArray);
-
-  var arrayBase64 = waveformRESP.measurementArray;
-
-  var totalImage = await waveformRESP.saveImageBase64(arrayBase64);
-
-  console.log("total image", totalImage);
-
-  let values = {
-    respImage: totalImage,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
-  };
-
-  console.log("image converted", values.respImage);
-
-  //http://localhost:8080/BerryJavaPostgreSQL/rest/RespGraphicsCreate
-
-  fetch("http://localhost:8080/GuardiaJava/rest/RespGraphicsCreate", {
-    method: "POST",
-    body: JSON.stringify(values),
-    headers: headers,
-  })
-  .then(response => response.json()) // Parsea la respuesta como JSON
-  .then(data => {
-    console.log('Respuesta del servidor:', data);
-    if (data.error) {
-      document.getElementById("error-text").style.display = "block";
-    } else {
-      document.getElementById("error-text").style.display = "none";
+  } else {
+    for (let waveform of waveforms) {
+      if (waveform["buffer"].length > waveform["slice_size"]) {
+        waveform["waveform"].addArray(
+          waveform["buffer"].splice(0, waveform["slice_size"])
+        );
+      }
     }
-  })
-  .catch(err => console.log('Error al enviar solicitud:', err));
-    // .then((response) => response)
-    // .then((json) => console.log(json))
-    // .catch((err) => console.log(err));
+  }
 }
-
 async function mergeArrayBase64(measureArray = new Array()) {
   if (!Array.isArray(measureArray)) {
     throw new Error("Input must be an array");
@@ -572,7 +522,6 @@ const fitButtons = () => {
   let btns = Array.from(document.getElementsByClassName("item-settings-container"))
   btns.map(b => { b.style.height = `${parametersBoxHeigth}px` })
 }
-
 const fillPatientData = () => {
   const queryString = window.location.search;
   const params = new URLSearchParams(queryString);
@@ -581,7 +530,6 @@ const fillPatientData = () => {
 
   divPatient.innerHTML = descryptData(data);
 };
-
 const descryptData = (data) => {
   //TODO : Trabajar con url encriptada
   let parts = data.split("-");
@@ -596,7 +544,6 @@ const descryptData = (data) => {
   if (date.length > 0) dataPatient += ` - Fecha: ${date}`
   return dataPatient;
 };
-
 const setGreenBtn = (id) => {
   let boton = document.getElementById(id)
   boton.style.backgroundColor = "#00ff00";
@@ -609,10 +556,23 @@ const setGreenBtn = (id) => {
         boton.style.backgroundPosition = "0% 0%"; // Devolver la posición del gradiente a la parte superior
     }, 30000);
 }
-
 const setColorBorderBtn = (id,color) => {
   let boton = document.getElementById(id)
   boton.style.border = `2px solid ${color}`
+}
+
+const getActualTime = () => {
+  let date = new Date();
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, '0');
+  let day = String(date.getDate()).padStart(2, '0');
+  let hours = String(date.getHours()).padStart(2, '0');
+  let minutes = String(date.getMinutes()).padStart(2, '0');
+  let seconds = String(date.getSeconds()).padStart(2, '0');
+
+  let medicionTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000`;
+  console.log(medicionTime);
+  return medicionTime 
 }
 
 document.addEventListener("DOMContentLoaded", () => {
