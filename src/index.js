@@ -181,8 +181,8 @@ function saveEcg(ecgMeasureTime) {
     EcgHeartRate: heartRateValue,
     EcgRespRate: respRateValue,
     medicionTime: ecgMeasureTime,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId
   };
 
   let headers = new Headers();
@@ -212,8 +212,8 @@ async function saveEcgImage(ecgMeasureTime) {
   let values = {
     ecgImage: totalImage,
     medicionTime: ecgMeasureTime,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId
   };
   console.log("image converted", values.ecgImage);
 
@@ -244,8 +244,8 @@ async function saveRespImage(ecgMeasureTime) {
   let values = {
     respImage: totalImage,
     medicionTime: ecgMeasureTime,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId
   };
   console.log("image converted", values.respImage);
 
@@ -271,8 +271,8 @@ function saveNibp(nibpMeasureTime) {
     NibpSys: sysValue,
     NibpDia: diaValue,
     medicionTime: nibpMeasureTime,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId
   };
 
   let headers = new Headers();
@@ -294,8 +294,8 @@ function saveSpo2(measureTime) {
     Spo2Spo2: spo2Value.toString(),
     Spo2PulseRate: pulseRateValue.toString(),
     medicionTime: measureTime,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId
   };
 
   let headers = new Headers();
@@ -318,6 +318,7 @@ function saveSpo2(measureTime) {
   })
   .catch(err => console.log('Error al enviar solicitud:', err));
 }
+
 async function saveSpo2Image(spo2MeasureTime) {
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
@@ -337,8 +338,8 @@ async function saveSpo2Image(spo2MeasureTime) {
   let values = {
     spo2Image: totalImage,
     medicionTime: spo2MeasureTime,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId
   };
 
   console.log("image converted", values.spo2Image);
@@ -383,8 +384,8 @@ function saveTemperature(measureTime) {
   let values = {
     temp: temperatureValue,
     medicionTime: measureTime,
-    ConsultaId: parseInt(consultaId),
-    PacienteId: parseInt(pacienteId)
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId
   };
   console.log("TemperatureValue", values);
 
@@ -433,6 +434,7 @@ function updateWaveforms() {
     }
   }
 }
+
 async function mergeArrayBase64(measureArray = new Array()) {
   if (!Array.isArray(measureArray)) {
     throw new Error("Input must be an array");
@@ -596,3 +598,41 @@ document.addEventListener("DOMContentLoaded", () => {
     onBtnTemperatureClick()
   });
 });
+
+
+//Con esta func pruebo los proc genexus de mi local con datos inventados
+const testLocalFetch = (url) => {
+  //function saveTemperature(measureTime) {
+    spo2Value = "89"
+    pulseRateValue = "98"
+    measureTime = "2024-04-30T13:06:00.000"
+    let values =  {
+      Spo2Spo2: spo2Value.toString(),
+      Spo2PulseRate: pulseRateValue.toString(),
+      medicionTime: measureTime,
+      charConsultaId: consultaId,
+      charPacienteId: pacienteId
+    };
+    console.log("values", values);
+  
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Accept", "application/json");
+  
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: headers,
+    })
+    .then(response => response.json()) // Parsea la respuesta como JSON
+    .then(data => {
+      console.log('Respuesta del servidor:', data);
+      if (data.error) {
+        document.getElementById("error-text").style.display = "block";
+      } else {
+        document.getElementById("error-text").style.display = "none";
+      }
+    })
+    .catch(err => console.log('Error al enviar solicitud:', err));
+  //}
+}
