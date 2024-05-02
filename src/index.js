@@ -555,6 +555,7 @@ const fillPatientData = () => {
   divPatient.innerHTML = descryptData(data);
 };
 const descryptData = (data) => {
+  let dataPatient = ''
   if (data == null) {
     dataPatient = "-sin datos-";
   } else {
@@ -629,14 +630,14 @@ document.addEventListener("DOMContentLoaded", () => {
 //Con esta func pruebo los proc genexus de mi local con datos inventados
 const testLocalFetch = (url) => {
   //http://localhost:8084/GuardiaJava/rest/Spo2Create
-  measureTime = getActualTime();
+  measureTime = getActualTime()
   spo2Value = "100";
   pulseRateValue = "98";
-  temperatureValue = 10.0;
-  heartRateValue = "100";
-  respRateValue = "100";
-  sysValue = "100";
-  diaValue = "100";
+  temperatureValue = 10.0
+  heartRateValue = '100'
+  respRateValue = '100'
+  sysValue = '100'
+  diaValue = '100'
   let values = {
     // Spo2Spo2: spo2Value.toString(),
     // Spo2PulseRate: pulseRateValue.toString(),
