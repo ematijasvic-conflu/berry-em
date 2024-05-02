@@ -566,7 +566,7 @@ const descryptData = (data) => {
     let date = parts[2];
     pacienteId = parts[3];
     consultaId = parts[4];
-    let dataPatient = "";
+    dataPatient = "";
     if (name.length > 0) dataPatient += `Paciente: ${name}`;
     if (age > 0) dataPatient += ` - Edad: ${age} años`;
     if (date.length > 0) dataPatient += ` - Fecha: ${date}`;
