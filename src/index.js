@@ -1,8 +1,23 @@
 const txBluetoothStatus = document.getElementById("bluetooth-status");
 
-const waveformECG = new BMWaveform(document.getElementById("waveform-ecg"), "red", 250, 1);
-const waveformSpO2 = new BMWaveform(document.getElementById("waveform-spo2"), "red", 100, 3);
-const waveformRESP = new BMWaveform(document.getElementById("waveform-resp"), "yellow", 250, 3);
+const waveformECG = new BMWaveform(
+  document.getElementById("waveform-ecg"),
+  "red",
+  250,
+  1
+);
+const waveformSpO2 = new BMWaveform(
+  document.getElementById("waveform-spo2"),
+  "red",
+  100,
+  3
+);
+const waveformRESP = new BMWaveform(
+  document.getElementById("waveform-resp"),
+  "yellow",
+  250,
+  3
+);
 
 const paramHeartRate = document.getElementById("parameter-heart-rate");
 const paramNIBP = document.getElementById("parameter-nibp");
@@ -11,8 +26,8 @@ const paramPulseRate = document.getElementById("parameter-pulse-rate");
 const paramTemperature = document.getElementById("parameter-temperature");
 const paramRespRate = document.getElementById("parameter-resp-rate");
 
-let pacienteId = '';
-let consultaId = '';
+let pacienteId = "";
+let consultaId = "";
 let heartRateValue = "";
 let respRateValue = "";
 let sysValue = "";
@@ -68,8 +83,8 @@ function onBtnSearchClick() {
 }
 
 function onBtnEcgClick() {
-  let ecgMeasureTime = getActualTime()
-  setGreenBtn("btnEcg")
+  let ecgMeasureTime = getActualTime();
+  setGreenBtn("btnEcg");
   let counterEcg = 0;
   let saveEcgDataExecuted = false;
 
@@ -101,8 +116,8 @@ function onBtnEcgClick() {
 }
 
 function onBtnNIBPClick() {
-  nibpMeasureTime = getActualTime()
-  setGreenBtn("btnNibp")
+  nibpMeasureTime = getActualTime();
+  setGreenBtn("btnNibp");
   patientMonitor.startNIBP();
 
   let saveNibpDataExecuted = false;
@@ -126,8 +141,8 @@ function onBtnNIBPClick() {
 }
 
 function onBtnSpo2Click() {
-  setGreenBtn("btnSpo2")
-  let spo2MeasureTime = getActualTime()
+  setGreenBtn("btnSpo2");
+  let spo2MeasureTime = getActualTime();
   let saveSpo2DataExecuted = false;
   spo2StartArray = false;
 
@@ -158,9 +173,9 @@ function onBtnSpo2Click() {
 }
 
 function onBtnTemperatureClick() {
-  setGreenBtn("btnTemp")
+  setGreenBtn("btnTemp");
   setTimeout(stopTemperature, 31000);
-  let tempMeasureTime = getActualTime()
+  let tempMeasureTime = getActualTime();
   dataParser.registerCallback(
     "on_temp_params_received",
     (states, temperature) => {
@@ -168,7 +183,10 @@ function onBtnTemperatureClick() {
       temperatureValue = temperature;
       paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
       if (!counterTemperature && temperature !== 0) {
-        counterTemperature = setInterval(() => saveTemperature(tempMeasureTime), 1000);
+        counterTemperature = setInterval(
+          () => saveTemperature(tempMeasureTime),
+          1000
+        );
       }
     }
   );
@@ -178,11 +196,11 @@ setInterval(updateWaveforms, 40);
 
 function saveEcg(ecgMeasureTime) {
   let values = {
-    EcgHeartRate: heartRateValue,
-    EcgRespRate: respRateValue,
+    ecgHeartRate: heartRateValue,
+    ecgRespRate: respRateValue,
     medicionTime: ecgMeasureTime,
     charConsultaId: consultaId,
-    charPacienteId: pacienteId
+    charPacienteId: pacienteId,
   };
 
   let headers = new Headers();
@@ -213,7 +231,7 @@ async function saveEcgImage(ecgMeasureTime) {
     ecgImage: totalImage,
     medicionTime: ecgMeasureTime,
     charConsultaId: consultaId,
-    charPacienteId: pacienteId
+    charPacienteId: pacienteId,
   };
   console.log("image converted", values.ecgImage);
 
@@ -222,16 +240,16 @@ async function saveEcgImage(ecgMeasureTime) {
     body: JSON.stringify(values),
     headers: headers,
   })
-  .then(response => response.json()) // Parsea la respuesta como JSON
-  .then(data => {
-    console.log('Respuesta del servidor:', data);
-    if (data.error) {
-      document.getElementById("error-text").style.display = "block";
-    } else {
-      document.getElementById("error-text").style.display = "none";
-    }
-  })
-  .catch(err => console.log('Error al enviar solicitud:', err));
+    .then((response) => response.json()) // Parsea la respuesta como JSON
+    .then((data) => {
+      console.log("Respuesta del servidor:", data);
+      if (data.error) {
+        document.getElementById("error-text").style.display = "block";
+      } else {
+        document.getElementById("error-text").style.display = "none";
+      }
+    })
+    .catch((err) => console.log("Error al enviar solicitud:", err));
 }
 async function saveRespImage(ecgMeasureTime) {
   let headers = new Headers();
@@ -245,7 +263,7 @@ async function saveRespImage(ecgMeasureTime) {
     respImage: totalImage,
     medicionTime: ecgMeasureTime,
     charConsultaId: consultaId,
-    charPacienteId: pacienteId
+    charPacienteId: pacienteId,
   };
   console.log("image converted", values.respImage);
 
@@ -254,16 +272,16 @@ async function saveRespImage(ecgMeasureTime) {
     body: JSON.stringify(values),
     headers: headers,
   })
-  .then(response => response.json()) // Parsea la respuesta como JSON
-  .then(data => {
-    console.log('Respuesta del servidor:', data);
-    if (data.error) {
-      document.getElementById("error-text").style.display = "block";
-    } else {
-      document.getElementById("error-text").style.display = "none";
-    }
-  })
-  .catch(err => console.log('Error al enviar solicitud:', err));
+    .then((response) => response.json()) // Parsea la respuesta como JSON
+    .then((data) => {
+      console.log("Respuesta del servidor:", data);
+      if (data.error) {
+        document.getElementById("error-text").style.display = "block";
+      } else {
+        document.getElementById("error-text").style.display = "none";
+      }
+    })
+    .catch((err) => console.log("Error al enviar solicitud:", err));
 }
 
 function saveNibp(nibpMeasureTime) {
@@ -272,7 +290,7 @@ function saveNibp(nibpMeasureTime) {
     NibpDia: diaValue,
     medicionTime: nibpMeasureTime,
     charConsultaId: consultaId,
-    charPacienteId: pacienteId
+    charPacienteId: pacienteId,
   };
 
   let headers = new Headers();
@@ -290,40 +308,40 @@ function saveNibp(nibpMeasureTime) {
 }
 
 function saveSpo2(measureTime) {
-  let values =  {
+  let values = {
     Spo2Spo2: spo2Value.toString(),
     Spo2PulseRate: pulseRateValue.toString(),
     medicionTime: measureTime,
     charConsultaId: consultaId,
-    charPacienteId: pacienteId
+    charPacienteId: pacienteId,
   };
 
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
-  
+
   fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2Create", {
     method: "POST",
     body: JSON.stringify(values),
-    headers: headers
+    headers: headers,
   })
-  .then(response => response.json()) // Parsea la respuesta como JSON
-  .then(data => {
-    console.log('Respuesta del servidor:', data);
-    if (data.error) {
-      document.getElementById("error-text").style.display = "block";
-    } else {
-      document.getElementById("error-text").style.display = "none";
-    }
-  })
-  .catch(err => console.log('Error al enviar solicitud:', err));
+    .then((response) => response.json()) // Parsea la respuesta como JSON
+    .then((data) => {
+      console.log("Respuesta del servidor:", data);
+      if (data.error) {
+        document.getElementById("error-text").style.display = "block";
+      } else {
+        document.getElementById("error-text").style.display = "none";
+      }
+    })
+    .catch((err) => console.log("Error al enviar solicitud:", err));
 }
 
 async function saveSpo2Image(spo2MeasureTime) {
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("Access-Control-Allow-Origin", "*");
-  
+
   console.log("array", waveformSpO2.measurementArray);
   console.log("array length", waveformSpO2.measurementArray.length);
   console.log("array copia", [...waveformSpO2.measurementArray]); // Hace una copia del array antes de imprimirlo
@@ -339,7 +357,7 @@ async function saveSpo2Image(spo2MeasureTime) {
     spo2Image: totalImage,
     medicionTime: spo2MeasureTime,
     charConsultaId: consultaId,
-    charPacienteId: pacienteId
+    charPacienteId: pacienteId,
   };
 
   console.log("image converted", values.spo2Image);
@@ -349,16 +367,16 @@ async function saveSpo2Image(spo2MeasureTime) {
     body: JSON.stringify(values),
     headers: headers,
   })
-  .then(response => response.json()) // Parsea la respuesta como JSON
-  .then(data => {
-    console.log('Respuesta del servidor:', data);
-    if (data.error) {
-      document.getElementById("error-text").style.display = "block";
-    } else {
-      document.getElementById("error-text").style.display = "none";
-    }
-  })
-  .catch(err => console.log('Error al enviar solicitud:', err));
+    .then((response) => response.json()) // Parsea la respuesta como JSON
+    .then((data) => {
+      console.log("Respuesta del servidor:", data);
+      if (data.error) {
+        document.getElementById("error-text").style.display = "block";
+      } else {
+        document.getElementById("error-text").style.display = "none";
+      }
+    })
+    .catch((err) => console.log("Error al enviar solicitud:", err));
 }
 
 function onBtnSpo2Image() {
@@ -385,7 +403,7 @@ function saveTemperature(measureTime) {
     temp: temperatureValue,
     medicionTime: measureTime,
     charConsultaId: consultaId,
-    charPacienteId: pacienteId
+    charPacienteId: pacienteId,
   };
   console.log("TemperatureValue", values);
 
@@ -398,16 +416,16 @@ function saveTemperature(measureTime) {
     body: JSON.stringify(values),
     headers: headers,
   })
-  .then(response => response.json()) // Parsea la respuesta como JSON
-  .then(data => {
-    console.log('Respuesta del servidor:', data);
-    if (data.error) {
-      document.getElementById("error-text").style.display = "block";
-    } else {
-      document.getElementById("error-text").style.display = "none";
-    }
-  })
-  .catch(err => console.log('Error al enviar solicitud:', err));
+    .then((response) => response.json()) // Parsea la respuesta como JSON
+    .then((data) => {
+      console.log("Respuesta del servidor:", data);
+      if (data.error) {
+        document.getElementById("error-text").style.display = "block";
+      } else {
+        document.getElementById("error-text").style.display = "none";
+      }
+    })
+    .catch((err) => console.log("Error al enviar solicitud:", err));
 }
 function stopTemperature() {
   clearInterval(counterTemperature);
@@ -417,7 +435,6 @@ function refreshBluetoothStatus(status) {
   txBluetoothStatus.innerHTML = status;
 }
 function updateWaveforms() {
- 
   if (document.hidden) {
     for (let waveform of waveforms) {
       waveform["waveform"].addArray(
@@ -520,10 +537,15 @@ async function saveImageBase64(measureArray = new Array()) {
 }*/
 
 const fitButtons = () => {
-  let parametersBoxHeigth = document.querySelector(".parameter-box").offsetHeight
-  let btns = Array.from(document.getElementsByClassName("item-settings-container"))
-  btns.map(b => { b.style.height = `${parametersBoxHeigth}px` })
-}
+  let parametersBoxHeigth =
+    document.querySelector(".parameter-box").offsetHeight;
+  let btns = Array.from(
+    document.getElementsByClassName("item-settings-container")
+  );
+  btns.map((b) => {
+    b.style.height = `${parametersBoxHeigth}px`;
+  });
+};
 const fillPatientData = () => {
   const queryString = window.location.search;
   const params = new URLSearchParams(queryString);
@@ -533,53 +555,58 @@ const fillPatientData = () => {
   divPatient.innerHTML = descryptData(data);
 };
 const descryptData = (data) => {
-  //TODO : Trabajar con url encriptada
-  let parts = data.split("-");
-  let name = parts[0]
-  let age = parts[1]
-  let date = parts[2]
-  pacienteId = parts[3]
-  consultaId = parts[4]
-  let dataPatient = ''
-  if (name.length > 0) dataPatient += `Paciente: ${name}`
-  if (age > 0) dataPatient += ` - Edad: ${age} años`
-  if (date.length > 0) dataPatient += ` - Fecha: ${date}`
+  if (data == null) {
+    dataPatient = "-sin datos-";
+  } else {
+    //TODO : Trabajar con url encriptada
+    let parts = data.split("-");
+    let name = parts[0];
+    let age = parts[1];
+    let date = parts[2];
+    pacienteId = parts[3];
+    consultaId = parts[4];
+    let dataPatient = "";
+    if (name.length > 0) dataPatient += `Paciente: ${name}`;
+    if (age > 0) dataPatient += ` - Edad: ${age} años`;
+    if (date.length > 0) dataPatient += ` - Fecha: ${date}`;
+  }
   return dataPatient;
 };
+
 const setGreenBtn = (id) => {
-  let boton = document.getElementById(id)
+  let boton = document.getElementById(id);
   boton.style.backgroundColor = "#00ff00";
-  setTimeout(function() {
-        boton.style.backgroundColor = ''
+  setTimeout(function () {
+    boton.style.backgroundColor = "";
   }, 30000); // 30 segundos
 
   boton.style.backgroundPosition = "0% 100%"; // Cambiar la posición del gradiente hacia abajo
-    setTimeout(function() {
-        boton.style.backgroundPosition = "0% 0%"; // Devolver la posición del gradiente a la parte superior
-    }, 30000);
-}
-const setColorBorderBtn = (id,color) => {
-  let boton = document.getElementById(id)
-  boton.style.border = `2px solid ${color}`
-}
+  setTimeout(function () {
+    boton.style.backgroundPosition = "0% 0%"; // Devolver la posición del gradiente a la parte superior
+  }, 30000);
+};
+const setColorBorderBtn = (id, color) => {
+  let boton = document.getElementById(id);
+  boton.style.border = `2px solid ${color}`;
+};
 
 const getActualTime = () => {
   let date = new Date();
   let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, '0');
-  let day = String(date.getDate()).padStart(2, '0');
-  let hours = String(date.getHours()).padStart(2, '0');
-  let minutes = String(date.getMinutes()).padStart(2, '0');
-  let seconds = String(date.getSeconds()).padStart(2, '0');
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+  let day = String(date.getDate()).padStart(2, "0");
+  let hours = String(date.getHours()).padStart(2, "0");
+  let minutes = String(date.getMinutes()).padStart(2, "0");
+  let seconds = String(date.getSeconds()).padStart(2, "0");
 
   let medicionTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000`;
   console.log(medicionTime);
-  return medicionTime 
-}
+  return medicionTime;
+};
 
 document.addEventListener("DOMContentLoaded", () => {
-  window.addEventListener('resize', fitButtons);
-  fitButtons()
+  window.addEventListener("resize", fitButtons);
+  fitButtons();
   fillPatientData();
 
   document.getElementById("btnEcg").addEventListener("click", () => {
@@ -595,44 +622,52 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("btnTemp").addEventListener("click", () => {
     stopTemperature();
-    onBtnTemperatureClick()
+    onBtnTemperatureClick();
   });
 });
 
-
 //Con esta func pruebo los proc genexus de mi local con datos inventados
 const testLocalFetch = (url) => {
-  //function saveTemperature(measureTime) {
-    spo2Value = "89"
-    pulseRateValue = "98"
-    measureTime = "2024-04-30T13:06:00.000"
-    let values =  {
-      Spo2Spo2: spo2Value.toString(),
-      Spo2PulseRate: pulseRateValue.toString(),
-      medicionTime: measureTime,
-      charConsultaId: consultaId,
-      charPacienteId: pacienteId
-    };
-    console.log("values", values);
-  
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("Accept", "application/json");
-  
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(values),
-      headers: headers,
-    })
-    .then(response => response.json()) // Parsea la respuesta como JSON
-    .then(data => {
-      console.log('Respuesta del servidor:', data);
+  //http://localhost:8084/GuardiaJava/rest/Spo2Create
+  measureTime = getActualTime();
+  spo2Value = "100";
+  pulseRateValue = "98";
+  temperatureValue = 10.0;
+  heartRateValue = "100";
+  respRateValue = "100";
+  sysValue = "100";
+  diaValue = "100";
+  let values = {
+    // Spo2Spo2: spo2Value.toString(),
+    // Spo2PulseRate: pulseRateValue.toString(),
+    // ecgHeartRate: heartRateValue,
+    // ecgRespRate: respRateValue,
+    // temp: temperatureValue,
+    NibpSys: sysValue,
+    NibpDia: diaValue,
+    medicionTime: measureTime,
+    charConsultaId: consultaId,
+    charPacienteId: pacienteId,
+  };
+  console.log("values", values);
+
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  headers.append("Accept", "application/json");
+
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: headers,
+  })
+    .then((response) => response.json()) // Parsea la respuesta como JSON
+    .then((data) => {
+      console.log("Respuesta del servidor:", data);
       if (data.error) {
         document.getElementById("error-text").style.display = "block";
       } else {
         document.getElementById("error-text").style.display = "none";
       }
     })
-    .catch(err => console.log('Error al enviar solicitud:', err));
-  //}
-}
+    .catch((err) => console.log("Error al enviar solicitud:", err));
+};
