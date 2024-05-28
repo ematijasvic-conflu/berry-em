@@ -3,18 +3,29 @@
   <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="./css/styles.css" />
-    <!-- <script type="module" src="../src/index.js"></script> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
     <div class="status-bar-container">
-      <div class="bluetoothImage" id="bluetoothImage" onclick="onBtnSearchClick()">
+      <div
+        class="bluetoothImage"
+        id="bluetoothImage"
+        onclick="onBtnSearchClick()"
+      >
         <img class="setting-button" src="./images/bluetooth.png" />
       </div>
       <div class="status-text">Bluetooth:</div>
       <div id="bluetooth-status" class="status-text">Not Connect.</div>
       <div id="patient" class="status-text"></div>
-      <p id="error-text" class="error-text" >Error: por favor intente de nuevo</p>
+      <p id="error-text" class="error-text">
+        Error: por favor intente de nuevo
+      </p>
     </div>
     <div class="container">
       <div class="waveforms-container">
@@ -106,6 +117,5 @@
     <script src="../src/bm-data-parser.js"></script>
     <script src="../src/bm-patient-monitor.js"></script>
     <script src="../src/index.js"></script>
-    
   </body>
 </html>

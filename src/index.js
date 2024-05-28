@@ -91,8 +91,6 @@ function onBtnEcgClick() {
   dataParser.registerCallback(
     "on_ecg_params_received",
     (states, heartRate, respRate) => {
-      console.log("HR(bpm)", heartRate);
-      console.log("RESP(brpm)", respRate);
       heartRateValue = heartRate;
       respRateValue = respRate;
       paramHeartRate.innerHTML = heartRate === 0 ? "- -" : heartRate;
@@ -100,7 +98,6 @@ function onBtnEcgClick() {
       if (counterEcg < 30 && heartRate !== 0 && respRate !== 0) {
         saveEcg(ecgMeasureTime);
         counterEcg++;
-        console.log("countEcg", counterEcg);
         saveEcgDataExecuted = true;
       }
 
@@ -125,8 +122,6 @@ function onBtnNIBPClick() {
   dataParser.registerCallback(
     "on_nibp_params_received",
     (states, cuff, sys, mean, dia) => {
-      console.log("NIBP(mmHg) Sys", sys);
-      console.log("NIBP(mmHg) Dia", dia);
       sysValue = sys;
       diaValue = dia;
       paramNIBP.innerHTML =
@@ -157,8 +152,6 @@ function onBtnSpo2Click() {
       if (counterSpo2 <= 30 && spo2 !== 127 && pulseRate !== 255) {
         saveSpo2(spo2MeasureTime);
         counterSpo2++;
-        console.log("counter spo2", counterSpo2);
-
         saveSpo2DataExecuted = true;
       }
 
@@ -179,7 +172,6 @@ function onBtnTemperatureClick() {
   dataParser.registerCallback(
     "on_temp_params_received",
     (states, temperature) => {
-      console.log("Temp(°C)", temperature);
       temperatureValue = temperature;
       paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
       if (!counterTemperature && temperature !== 0) {
@@ -220,12 +212,10 @@ async function saveEcgImage(ecgMeasureTime) {
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("Access-Control-Allow-Origin", "*");
-
-  console.log("array", waveformECG.measurementArray);
+  // console.log("array", waveformECG.measurementArray);
   var arrayBase64 = waveformECG.measurementArray;
   var totalImage = await waveformECG.saveImageBase64(arrayBase64);
-
-  console.log("total image", totalImage);
+  // console.log("total image", totalImage);
 
   let values = {
     ecgImage: totalImage,
@@ -233,7 +223,6 @@ async function saveEcgImage(ecgMeasureTime) {
     charConsultaId: consultaId,
     charPacienteId: pacienteId,
   };
-  console.log("image converted", values.ecgImage);
 
   fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/EcgGraphicsCreate", {
     method: "POST",
@@ -242,7 +231,6 @@ async function saveEcgImage(ecgMeasureTime) {
   })
     .then((response) => response.json()) // Parsea la respuesta como JSON
     .then((data) => {
-      console.log("Respuesta del servidor:", data);
       if (data.error) {
         document.getElementById("error-text").style.display = "block";
       } else {
@@ -257,7 +245,7 @@ async function saveRespImage(ecgMeasureTime) {
   headers.append("Access-Control-Allow-Origin", "*");
   var arrayBase64 = waveformRESP.measurementArray;
   var totalImage = await waveformRESP.saveImageBase64(arrayBase64);
-  console.log("total image", totalImage);
+  // console.log("total image", totalImage);
 
   let values = {
     respImage: totalImage,
@@ -265,7 +253,6 @@ async function saveRespImage(ecgMeasureTime) {
     charConsultaId: consultaId,
     charPacienteId: pacienteId,
   };
-  console.log("image converted", values.respImage);
 
   fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/RespGraphicsCreate", {
     method: "POST",
@@ -274,7 +261,6 @@ async function saveRespImage(ecgMeasureTime) {
   })
     .then((response) => response.json()) // Parsea la respuesta como JSON
     .then((data) => {
-      console.log("Respuesta del servidor:", data);
       if (data.error) {
         document.getElementById("error-text").style.display = "block";
       } else {
@@ -327,7 +313,6 @@ function saveSpo2(measureTime) {
   })
     .then((response) => response.json()) // Parsea la respuesta como JSON
     .then((data) => {
-      console.log("Respuesta del servidor:", data);
       if (data.error) {
         document.getElementById("error-text").style.display = "block";
       } else {
@@ -341,26 +326,19 @@ async function saveSpo2Image(spo2MeasureTime) {
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("Access-Control-Allow-Origin", "*");
-
-  console.log("array", waveformSpO2.measurementArray);
-  console.log("array length", waveformSpO2.measurementArray.length);
-  console.log("array copia", [...waveformSpO2.measurementArray]); // Hace una copia del array antes de imprimirlo
-  console.log("array lenght", waveformSpO2.measurementArray.length);
+  // console.log("array", waveformSpO2.measurementArray);
+  // console.log("array length", waveformSpO2.measurementArray.length);
+  // console.log("array copia", [...waveformSpO2.measurementArray]); // Hace una copia del array antes de imprimirlo
+  // console.log("array lenght", waveformSpO2.measurementArray.length);
 
   var arrayBase64 = waveformSpO2.measurementArray;
-  //var totalImage = await saveImageBase64(arrayBase64);
   var totalImage = await waveformSpO2.saveImageBase64(arrayBase64);
-
-  console.log("total image", totalImage);
-
   let values = {
     spo2Image: totalImage,
     medicionTime: spo2MeasureTime,
     charConsultaId: consultaId,
     charPacienteId: pacienteId,
   };
-
-  console.log("image converted", values.spo2Image);
 
   fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2GraphicsCreate", {
     method: "POST",
@@ -369,7 +347,6 @@ async function saveSpo2Image(spo2MeasureTime) {
   })
     .then((response) => response.json()) // Parsea la respuesta como JSON
     .then((data) => {
-      console.log("Respuesta del servidor:", data);
       if (data.error) {
         document.getElementById("error-text").style.display = "block";
       } else {
@@ -379,25 +356,6 @@ async function saveSpo2Image(spo2MeasureTime) {
     .catch((err) => console.log("Error al enviar solicitud:", err));
 }
 
-function onBtnSpo2Image() {
-  let headers = new Headers();
-
-  headers.append("Content-Type", "application/json");
-
-  fetch("http://localhost:8080/BerryJavaPostgreSQL/rest/Spo2Obtener", {
-    method: "POST",
-    headers: headers,
-  })
-    .then((response) => response)
-    .then((json) => {
-      console.log(json);
-      var image = new Image();
-      image.src = json.imageSpo2;
-      document.getElementById("imageSpo2").innerHTML = image;
-    })
-    .catch((err) => console.log(err));
-}
-
 function saveTemperature(measureTime) {
   let values = {
     temp: temperatureValue,
@@ -405,8 +363,6 @@ function saveTemperature(measureTime) {
     charConsultaId: consultaId,
     charPacienteId: pacienteId,
   };
-  console.log("TemperatureValue", values);
-
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
@@ -418,7 +374,6 @@ function saveTemperature(measureTime) {
   })
     .then((response) => response.json()) // Parsea la respuesta como JSON
     .then((data) => {
-      console.log("Respuesta del servidor:", data);
       if (data.error) {
         document.getElementById("error-text").style.display = "block";
       } else {
@@ -576,7 +531,7 @@ const descryptData = (data) => {
 
 const setGreenBtn = (id) => {
   let boton = document.getElementById(id);
-  boton.style.backgroundColor = "#00ff00";
+  boton.style.backgroundColor = "#00ABC8";
   setTimeout(function () {
     boton.style.backgroundColor = "";
   }, 30000); // 30 segundos
@@ -601,7 +556,6 @@ const getActualTime = () => {
   let seconds = String(date.getSeconds()).padStart(2, "0");
 
   let medicionTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000`;
-  console.log(medicionTime);
   return medicionTime;
 };
 
@@ -626,49 +580,3 @@ document.addEventListener("DOMContentLoaded", () => {
     onBtnTemperatureClick();
   });
 });
-
-//Con esta func pruebo los proc genexus de mi local con datos inventados
-const testLocalFetch = (url) => {
-  //http://localhost:8084/GuardiaJava/rest/Spo2Create
-  measureTime = getActualTime()
-  spo2Value = "100";
-  pulseRateValue = "98";
-  temperatureValue = 10.0
-  heartRateValue = '100'
-  respRateValue = '100'
-  sysValue = '100'
-  diaValue = '100'
-  let values = {
-    // Spo2Spo2: spo2Value.toString(),
-    // Spo2PulseRate: pulseRateValue.toString(),
-    // ecgHeartRate: heartRateValue,
-    // ecgRespRate: respRateValue,
-    // temp: temperatureValue,
-    NibpSys: sysValue,
-    NibpDia: diaValue,
-    medicionTime: measureTime,
-    charConsultaId: consultaId,
-    charPacienteId: pacienteId,
-  };
-  console.log("values", values);
-
-  let headers = new Headers();
-  headers.append("Content-Type", "application/json");
-  headers.append("Accept", "application/json");
-
-  fetch(url, {
-    method: "POST",
-    body: JSON.stringify(values),
-    headers: headers,
-  })
-    .then((response) => response.json()) // Parsea la respuesta como JSON
-    .then((data) => {
-      console.log("Respuesta del servidor:", data);
-      if (data.error) {
-        document.getElementById("error-text").style.display = "block";
-      } else {
-        document.getElementById("error-text").style.display = "none";
-      }
-    })
-    .catch((err) => console.log("Error al enviar solicitud:", err));
-};
