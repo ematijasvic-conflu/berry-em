@@ -583,7 +583,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Received URL from parent:", e.data);
     // Extraer la parte deseada de la URL
     let url = new URL(e.data);
-    let baseUrl = url.origin + url.pathname.split('/').slice(0, 3).join('/');
+    let baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
     console.log("Extracted baseUrl:", baseUrl);
   });
 });
