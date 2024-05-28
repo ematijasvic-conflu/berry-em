@@ -579,4 +579,14 @@ document.addEventListener("DOMContentLoaded", () => {
     stopTemperature();
     onBtnTemperatureClick();
   });
+
+  // Imprimir la URL del documento padre
+  console.log("Parent URL (via referrer):", document.referrer);
+
+  // Si los documentos están en el mismo origen
+  try {
+    console.log("Parent URL (via parent):", window.parent.location.href);
+  } catch (e) {
+    console.warn("No se puede acceder a la URL del padre debido a restricciones de CORS:", e);
+  }
 });
