@@ -199,7 +199,7 @@ function saveEcg(ecgMeasureTime) {
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
 
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/EcgCreate", {
+  fetch(baseUrl + "/rest/EcgCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -224,7 +224,7 @@ async function saveEcgImage(ecgMeasureTime) {
     charPacienteId: pacienteId,
   };
 
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/EcgGraphicsCreate", {
+  fetch(baseUrl + "/rest/EcgGraphicsCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -254,7 +254,7 @@ async function saveRespImage(ecgMeasureTime) {
     charPacienteId: pacienteId,
   };
 
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/RespGraphicsCreate", {
+  fetch(baseUrl + "/rest/RespGraphicsCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -283,7 +283,7 @@ function saveNibp(nibpMeasureTime) {
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
 
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/NibpCreate", {
+  fetch(baseUrl + "/rest/NibpCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -306,7 +306,7 @@ function saveSpo2(measureTime) {
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
 
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2Create", {
+  fetch(baseUrl + "/rest/Spo2Create", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -340,7 +340,7 @@ async function saveSpo2Image(spo2MeasureTime) {
     charPacienteId: pacienteId,
   };
 
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/Spo2GraphicsCreate", {
+  fetch(baseUrl + "/rest/Spo2GraphicsCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -367,7 +367,7 @@ function saveTemperature(measureTime) {
   headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
 
-  fetch("https://app-prepro.sigestion.ar/sanikumqa/rest/TemperatureCreate", {
+  fetch(baseUrl + "/rest/TemperatureCreate", {
     method: "POST",
     body: JSON.stringify(values),
     headers: headers,
@@ -579,8 +579,11 @@ document.addEventListener("DOMContentLoaded", () => {
     stopTemperature();
     onBtnTemperatureClick();
   });
-
   window.addEventListener("message", e => {
     console.log("Received URL from parent:", e.data);
+    // Extraer la parte deseada de la URL
+    let url = new URL(e.data);
+    let baseUrl = url.origin + url.pathname.split('/').slice(0, 3).join('/');
+    console.log("Extracted baseUrl:", baseUrl);
   });
 });
