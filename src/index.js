@@ -560,6 +560,12 @@ const getActualTime = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("message", e => {
+    // Extraer la parte deseada de la URL
+    var url = new URL(e.data);
+    var baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
+    console.log(baseUrl);
+  });
   window.addEventListener("resize", fitButtons);
   fitButtons();
   fillPatientData();
@@ -579,10 +585,5 @@ document.addEventListener("DOMContentLoaded", () => {
     stopTemperature();
     onBtnTemperatureClick();
   });
-  window.addEventListener("message", e => {
-    // Extraer la parte deseada de la URL
-    let url = new URL(e.data);
-    let baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
-    console.log(baseUrl);
-  });
+
 });
