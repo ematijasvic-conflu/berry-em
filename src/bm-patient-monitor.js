@@ -47,31 +47,31 @@ class BMPatientMonitor {
 
     this.device.addEventListener("gattserverdisconnected", () => {
       this.refreshStatus("Disconnected");
-      console.log("bm-patient-monitor: disconnected.");
+      // console.log("bm-patient-monitor: disconnected.");
     });
 
     while (this.chReceive == null && this.reconnectTime <= 5) {
-      console.log("bm-patient-monitor: ", "connect time " + this.reconnectTime);
+      // console.log("bm-patient-monitor: ", "connect time " + this.reconnectTime);
       this.refreshStatus("Connecting to " + this.device.name);
 
       try {
         this.server = await this.device.gatt.connect();
-        console.log("bm-patient-monitor: ", this.server);
+        // console.log("bm-patient-monitor: ", this.server);
 
         const service = await this.server.getPrimaryService(
           this.UUID_SERVICE_COMM
         );
-        console.log("bm-patient-monitor: ", service);
+        // console.log("bm-patient-monitor: ", service);
 
         this.chReceive = await service.getCharacteristic(
           this.UUID_CHARACTER_RECEIVE
         );
-        console.log("bm-patient-monitor: recv - ", this.chReceive);
+        // console.log("bm-patient-monitor: recv - ", this.chReceive);
 
         this.chSend = await service.getCharacteristic(this.UUID_CHARACTER_SEND);
-        console.log("bm-patient-monitor: send - ", this.chSend);
+        // console.log("bm-patient-monitor: send - ", this.chSend);
       } catch (e) {
-        console.log("bm-patient-monitor: ", this.chReceive);
+        // console.log("bm-patient-monitor: ", this.chReceive);
       }
 
       this.sleep(500);
@@ -83,7 +83,7 @@ class BMPatientMonitor {
     if (this.chReceive != null) {
       this.startNotify();
       this.refreshStatus("Connected to " + this.device.name);
-      console.log("bm-patient-monitor: " + "start notify");
+      // console.log("bm-patient-monitor: " + "start notify");
     } else {
       this.refreshStatus("Not Connect");
     }

@@ -35,6 +35,7 @@ let diaValue = "";
 let spo2Value = "";
 let pulseRateValue = "";
 let temperatureValue = "";
+let baseUrl = ""
 
 let spo2StartArray = false;
 let saveEcgImageExecuted = false;
@@ -548,22 +549,30 @@ const setColorBorderBtn = (id, color) => {
 
 const getActualTime = () => {
   let date = new Date();
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let minutes = String(date.getMinutes()).padStart(2, "0");
-  let seconds = String(date.getSeconds()).padStart(2, "0");
+  let options = { timeZone: 'America/Argentina/Buenos_Aires', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+  // Formatear la fecha y hora según la zona horaria de Buenos Aires
+  let dateTimeFormat = new Intl.DateTimeFormat('en-GB', options);
+  let formattedDateParts = dateTimeFormat.formatToParts(date);
+
+  // Extraer las partes formateadas
+  let year = formattedDateParts.find(part => part.type === 'year').value;
+  let month = formattedDateParts.find(part => part.type === 'month').value;
+  let day = formattedDateParts.find(part => part.type === 'day').value;
+  let hours = formattedDateParts.find(part => part.type === 'hour').value;
+  let minutes = formattedDateParts.find(part => part.type === 'minute').value;
+  let seconds = formattedDateParts.find(part => part.type === 'second').value;
 
   let medicionTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000`;
   return medicionTime;
 };
 
+
 document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("message", e => {
     // Extraer la parte deseada de la URL
     var url = new URL(e.data);
-    var baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
+    baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
     console.log(baseUrl);
   });
   window.addEventListener("resize", fitButtons);

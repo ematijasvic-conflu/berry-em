@@ -29,7 +29,7 @@
     if (this.curPointX >= this.canvas.width) {
       this.measurementArray.push(this.canvas.toDataURL());
       this.imageNumber++;
-      console.log("imageNumber if", this.imageNumber);
+      // console.log("imageNumber if", this.imageNumber);
       this.imageNumberArray.push(this.imageNumber);
 
       this.prevPointX = 0;
@@ -51,7 +51,7 @@
     }
 
     if (this.imageNumberArray.length > 0 && !this.imageArrayLength) {
-      console.log("image numbar array", this.imageNumberArray);
+      // console.log("image numbar array", this.imageNumberArray);
       this.imageArrayLength = true;
       this.imageNumberArray = [];
     }
@@ -72,7 +72,7 @@
 
     var xPosition = 0;
 
-    console.log("measure array", measureArray.length);
+    // console.log("measure array", measureArray.length);
 
     var loadImages = measureArray.map((base64, index) => {
       return new Promise((resolve, reject) => {
