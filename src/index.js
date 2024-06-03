@@ -562,8 +562,10 @@ const getActualTime = () => {
   let hours = formattedDateParts.find(part => part.type === 'hour').value;
   let minutes = formattedDateParts.find(part => part.type === 'minute').value;
   let seconds = formattedDateParts.find(part => part.type === 'second').value;
+  let horaMas3 = parseInt(hours)
+  horaMas3 += 3
 
-  let medicionTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000`;
+  let medicionTime = `${year}-${month}-${day} ${horaMas3}:${minutes}:${seconds}.000`;
   return medicionTime;
 };
 
