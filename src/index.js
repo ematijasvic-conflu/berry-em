@@ -36,6 +36,7 @@ let spo2Value = "";
 let pulseRateValue = "";
 let temperatureValue = "";
 let baseUrl = ""
+let timeGraph = 5000
 
 let spo2StartArray = false;
 let saveEcgImageExecuted = false;
@@ -84,105 +85,118 @@ function onBtnSearchClick() {
 }
 
 function onBtnEcgClick() {
-  let ecgMeasureTime = getActualTime();
-  setGreenBtn("btnEcg");
-  let counterEcg = 0;
-  let saveEcgDataExecuted = false;
+  if (sessionStorage.getItem("btnEcg") !== "active") {
+    setColorBtn("btnEcg");
+    sessionStorage.setItem("btnEcg", "active")
+    let ecgMeasureTime = getActualTime();
+    console.log("ecgBtn");
+    let counterEcg = 0;
+    let saveEcgDataExecuted = false;
 
-  dataParser.registerCallback(
-    "on_ecg_params_received",
-    (states, heartRate, respRate) => {
-      heartRateValue = heartRate;
-      respRateValue = respRate;
-      paramHeartRate.innerHTML = heartRate === 0 ? "- -" : heartRate;
-      paramRespRate.innerHTML = heartRate === 0 ? "- -" : respRate;
-      if (counterEcg < 30 && heartRate !== 0 && respRate !== 0) {
-        saveEcg(ecgMeasureTime);
-        counterEcg++;
-        saveEcgDataExecuted = true;
-      }
+    dataParser.registerCallback(
+      "on_ecg_params_received",
+      (states, heartRate, respRate) => {
+        heartRateValue = heartRate;
+        respRateValue = respRate;
+        paramHeartRate.innerHTML = heartRate === 0 ? "- -" : heartRate;
+        paramRespRate.innerHTML = heartRate === 0 ? "- -" : respRate;
+        if (counterEcg < 30 && heartRate !== 0 && respRate !== 0) {
+          saveEcg(ecgMeasureTime);
+          counterEcg++;
+          saveEcgDataExecuted = true;
+        }
 
-      if (counterEcg === 30 && saveEcgDataExecuted) {
-        setTimeout(async function () {
-          await saveEcgImage(ecgMeasureTime);
-          await saveRespImage(ecgMeasureTime);
-          saveEcgDataExecuted = false;
-        }, 5000);
+        if (counterEcg === 30 && saveEcgDataExecuted) {
+          setTimeout(async function () {
+            await saveEcgImage(ecgMeasureTime);
+            await saveRespImage(ecgMeasureTime);
+            saveEcgDataExecuted = false;
+          }, timeGraph);
+        }
       }
-    }
-  );
+    );
+  }
 }
 
 function onBtnNIBPClick() {
-  nibpMeasureTime = getActualTime();
-  setGreenBtn("btnNibp");
-  patientMonitor.startNIBP();
+  if (sessionStorage.getItem("btnNibp") !== "active") {
+    sessionStorage.setItem("btnNibp", "active")
+    nibpMeasureTime = getActualTime();
+    setColorBtn("btnNibp");
+    patientMonitor.startNIBP();
 
-  let saveNibpDataExecuted = false;
+    let saveNibpDataExecuted = false;
 
-  dataParser.registerCallback(
-    "on_nibp_params_received",
-    (states, cuff, sys, mean, dia) => {
-      sysValue = sys;
-      diaValue = dia;
-      paramNIBP.innerHTML =
-        sys === 0 || dia === 0 ? "- - -/- -" : sys + "/" + dia;
+    dataParser.registerCallback(
+      "on_nibp_params_received",
+      (states, cuff, sys, mean, dia) => {
+        sysValue = sys;
+        diaValue = dia;
+        paramNIBP.innerHTML =
+          sys === 0 || dia === 0 ? "- - -/- -" : sys + "/" + dia;
 
-      if (sys !== 0 && dia !== 0 && !saveNibpDataExecuted) {
-        saveNibp(nibpMeasureTime);
-        saveNibpDataExecuted = true;
+        if (sys !== 0 && dia !== 0 && !saveNibpDataExecuted) {
+          saveNibp(nibpMeasureTime);
+          saveNibpDataExecuted = true;
+        }
       }
-    }
-  );
+    );
+  }
 }
 
 function onBtnSpo2Click() {
-  setGreenBtn("btnSpo2");
-  let spo2MeasureTime = getActualTime();
-  let saveSpo2DataExecuted = false;
-  spo2StartArray = false;
+  if (sessionStorage.getItem("btnSpo2") !== "active") {
+    sessionStorage.setItem("btnSpo2", "active")
+    setColorBtn("btnSpo2");
+    let spo2MeasureTime = getActualTime();
+    let saveSpo2DataExecuted = false;
+    spo2StartArray = false;
 
-  dataParser.registerCallback(
-    "on_spo2_params_received",
-    async (states, spo2, pulseRate) => {
-      spo2Value = spo2;
-      pulseRateValue = pulseRate;
-      paramSpO2.innerHTML = spo2 === 127 ? "- -" : spo2;
-      paramPulseRate.innerHTML = pulseRate === 255 ? "- -" : pulseRate;
+    dataParser.registerCallback(
+      "on_spo2_params_received",
+      async (states, spo2, pulseRate) => {
+        spo2Value = spo2;
+        pulseRateValue = pulseRate;
+        paramSpO2.innerHTML = spo2 === 127 ? "- -" : spo2;
+        paramPulseRate.innerHTML = pulseRate === 255 ? "- -" : pulseRate;
 
-      if (counterSpo2 <= 30 && spo2 !== 127 && pulseRate !== 255) {
-        saveSpo2(spo2MeasureTime);
-        counterSpo2++;
-        saveSpo2DataExecuted = true;
+        if (counterSpo2 <= 30 && spo2 !== 127 && pulseRate !== 255) {
+          saveSpo2(spo2MeasureTime);
+          counterSpo2++;
+          saveSpo2DataExecuted = true;
+        }
+
+        if (counterSpo2 === 30) {
+          setTimeout(async function () {
+            await saveSpo2Image(spo2MeasureTime);
+            saveSpo2DataExecuted = false;
+          }, timeGraph);
+        }
       }
-
-      if (counterSpo2 === 30) {
-        setTimeout(async function () {
-          await saveSpo2Image(spo2MeasureTime);
-          saveSpo2DataExecuted = false;
-        }, 5000);
-      }
-    }
-  );
+    );
+  }
 }
 
 function onBtnTemperatureClick() {
-  setGreenBtn("btnTemp");
-  setTimeout(stopTemperature, 31000);
-  let tempMeasureTime = getActualTime();
-  dataParser.registerCallback(
-    "on_temp_params_received",
-    (states, temperature) => {
-      temperatureValue = temperature;
-      paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
-      if (!counterTemperature && temperature !== 0) {
-        counterTemperature = setInterval(
-          () => saveTemperature(tempMeasureTime),
-          1000
-        );
+  if (sessionStorage.getItem("btnTemp") !== "active") {
+    sessionStorage.setItem("btnTemp", "active")
+    setColorBtn("btnTemp");
+    setTimeout(stopTemperature, 31000);
+    let tempMeasureTime = getActualTime();
+    dataParser.registerCallback(
+      "on_temp_params_received",
+      (states, temperature) => {
+        temperatureValue = temperature;
+        paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
+        if (!counterTemperature && temperature !== 0) {
+          counterTemperature = setInterval(
+            () => saveTemperature(tempMeasureTime),
+            1000
+          );
+        }
       }
-    }
-  );
+    );
+  }
 }
 
 setInterval(updateWaveforms, 40);
@@ -530,11 +544,12 @@ const descryptData = (data) => {
   return dataPatient;
 };
 
-const setGreenBtn = (id) => {
+const setColorBtn = (id) => {
   let boton = document.getElementById(id);
   boton.style.backgroundColor = "#00ABC8";
   setTimeout(function () {
     boton.style.backgroundColor = "";
+    sessionStorage.setItem(id, "deactive")
   }, 30000); // 30 segundos
 
   boton.style.backgroundPosition = "0% 100%"; // Cambiar la posición del gradiente hacia abajo
@@ -569,14 +584,15 @@ const getActualTime = () => {
   return medicionTime;
 };
 
-
 document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("message", e => {
     // Extraer la parte deseada de la URL
     var url = new URL(e.data);
     baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
     console.log(baseUrl);
+
   });
+
   window.addEventListener("resize", fitButtons);
   fitButtons();
   fillPatientData();
