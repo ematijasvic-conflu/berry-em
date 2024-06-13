@@ -1,5 +1,5 @@
 const txBluetoothStatus = document.getElementById("bluetooth-status");
-sessionStorage.clear();
+
 const waveformECG = new BMWaveform(
   document.getElementById("waveform-ecg"),
   "red",
@@ -35,16 +35,16 @@ let diaValue = "";
 let spo2Value = "";
 let pulseRateValue = "";
 let temperatureValue = "";
-let baseUrl = "";
-let timeGraph = 5000;
+let baseUrl = ""
 
 let spo2StartArray = false;
+let saveEcgImageExecuted = false;
+let saveNibpDataExecuted = false;
 
 var calledSpo2Image = false;
 
 let counterSpo2 = 1;
 let counterEcg = 1;
-let counterTemperature = null;
 
 var dataParser = new BMDataParser();
 var patientMonitor = new BMPatientMonitor(dataParser, refreshBluetoothStatus);
@@ -77,128 +77,112 @@ dataParser.registerCallback("on_resp_waveform_received", (amp) => {
   }
 });
 
+let counterTemperature = null;
+
 function onBtnSearchClick() {
   patientMonitor.connect();
 }
 
 function onBtnEcgClick() {
-  if (
-    sessionStorage.getItem("btnEcg") !== "active" &&
-    sessionStorage.getItem("bth-status") == "Connected to BerryMed"
-  ) {
-    setColorBtn("btnEcg");
-    sessionStorage.setItem("btnEcg", "active");
-    let ecgMeasureTime = getActualTime();
-    console.log("ecgBtn");
-    let counterEcg = 0;
-    let saveEcgDataExecuted = false;
+  let ecgMeasureTime = getActualTime();
+  setGreenBtn("btnEcg");
+  let counterEcg = 0;
+  let saveEcgDataExecuted = false;
 
-    dataParser.registerCallback(
-      "on_ecg_params_received",
-      (states, heartRate, respRate) => {
-        heartRateValue = heartRate;
-        respRateValue = respRate;
-        paramHeartRate.innerHTML = heartRate === 0 ? "- -" : heartRate;
-        paramRespRate.innerHTML = heartRate === 0 ? "- -" : respRate;
-        if (counterEcg < 30 && heartRate !== 0 && respRate !== 0) {
-          saveEcg(ecgMeasureTime);
-          counterEcg++;
-          saveEcgDataExecuted = true;
-        }
-
-        if (counterEcg === 30 && saveEcgDataExecuted) {
-          setTimeout(async function () {
-            await saveEcgImage(ecgMeasureTime);
-            await saveRespImage(ecgMeasureTime);
-            saveEcgDataExecuted = false;
-          }, timeGraph);
-        }
+  dataParser.registerCallback(
+    "on_ecg_params_received",
+    (states, heartRate, respRate) => {
+      heartRateValue = heartRate;
+      respRateValue = respRate;
+      paramHeartRate.innerHTML = heartRate === 0 ? "- -" : heartRate;
+      paramRespRate.innerHTML = heartRate === 0 ? "- -" : respRate;
+      if (counterEcg < 30 && heartRate !== 0 && respRate !== 0) {
+        saveEcg(ecgMeasureTime);
+        counterEcg++;
+        saveEcgDataExecuted = true;
       }
-    );
-  }
+
+      if (counterEcg === 30 && saveEcgDataExecuted) {
+        setTimeout(async function () {
+          await saveEcgImage(ecgMeasureTime);
+          await saveRespImage(ecgMeasureTime);
+          saveEcgDataExecuted = false;
+        }, 5000);
+      }
+    }
+  );
 }
 
 function onBtnNIBPClick() {
-  if (
-    sessionStorage.getItem("btnNibp") !== "active" &&
-    sessionStorage.getItem("bth-status") == "Connected to BerryMed"
-  ) {
-    nibpMeasureTime = getActualTime();
-    document.getElementById("btnNibp").style.backgroundColor = "#00ABC8";
-    sessionStorage.setItem("btnNibp", "active");
-    patientMonitor.startNIBP();
-    dataParser.registerCallback(
-      "on_nibp_params_received",
-      (states, cuff, sys, mean, dia) => {
-        sysValue = sys;
-        diaValue = dia;
-        paramNIBP.innerHTML =
-          sys === 0 || dia === 0 ? "- - -/- -" : sys + "/" + dia;
-        if (sys !== 0 && dia !== 0) {
-          saveNibpDataExecuted = true;
-          document.getElementById("btnNibp").style.backgroundColor = "";
-          sessionStorage.setItem("btnNibp", "deactive");
-          saveNibp(nibpMeasureTime);
-        }
+  nibpMeasureTime = getActualTime();
+  setGreenBtn("btnNibp");
+  patientMonitor.startNIBP();
+
+  let saveNibpDataExecuted = false;
+
+  dataParser.registerCallback(
+    "on_nibp_params_received",
+    (states, cuff, sys, mean, dia) => {
+      sysValue = sys;
+      diaValue = dia;
+      paramNIBP.innerHTML =
+        sys === 0 || dia === 0 ? "- - -/- -" : sys + "/" + dia;
+
+      if (sys !== 0 && dia !== 0 && !saveNibpDataExecuted) {
+        saveNibp(nibpMeasureTime);
+        saveNibpDataExecuted = true;
       }
-    );
-  }
+    }
+  );
 }
 
 function onBtnSpo2Click() {
-  if (
-    sessionStorage.getItem("btnSpo2") !== "active" &&
-    sessionStorage.getItem("bth-status") == "Connected to BerryMed"
-  ) {
-    sessionStorage.setItem("btnSpo2", "active");
-    setColorBtn("btnSpo2");
-    let spo2MeasureTime = getActualTime();
-    spo2StartArray = false;
+  setGreenBtn("btnSpo2");
+  let spo2MeasureTime = getActualTime();
+  let saveSpo2DataExecuted = false;
+  spo2StartArray = false;
 
-    dataParser.registerCallback(
-      "on_spo2_params_received",
-      async (states, spo2, pulseRate) => {
-        spo2Value = spo2;
-        pulseRateValue = pulseRate;
-        paramSpO2.innerHTML = spo2 === 127 ? "- -" : spo2;
-        paramPulseRate.innerHTML = pulseRate === 255 ? "- -" : pulseRate;
+  dataParser.registerCallback(
+    "on_spo2_params_received",
+    async (states, spo2, pulseRate) => {
+      spo2Value = spo2;
+      pulseRateValue = pulseRate;
+      paramSpO2.innerHTML = spo2 === 127 ? "- -" : spo2;
+      paramPulseRate.innerHTML = pulseRate === 255 ? "- -" : pulseRate;
 
-        if (counterSpo2 <= 30 && spo2 !== 127 && pulseRate !== 255) {
-          saveSpo2(spo2MeasureTime);
-          counterSpo2++;
-        }
-
-        if (counterSpo2 === 30) {
-          setTimeout(async function () {
-            await saveSpo2Image(spo2MeasureTime);
-          }, timeGraph);
-        }
+      if (counterSpo2 <= 30 && spo2 !== 127 && pulseRate !== 255) {
+        saveSpo2(spo2MeasureTime);
+        counterSpo2++;
+        saveSpo2DataExecuted = true;
       }
-    );
-  }
+
+      if (counterSpo2 === 30) {
+        setTimeout(async function () {
+          await saveSpo2Image(spo2MeasureTime);
+          saveSpo2DataExecuted = false;
+        }, 5000);
+      }
+    }
+  );
 }
 
 function onBtnTemperatureClick() {
-  if (
-    sessionStorage.getItem("btnTemp") !== "active" &&
-    sessionStorage.getItem("bth-status") == "Connected to BerryMed"
-  ) {
-    counterTemperature = 0;
-    sessionStorage.setItem("btnTemp", "active");
-    setColorBtn("btnTemp");
-    let tempMeasureTime = getActualTime();
-    dataParser.registerCallback(
-      "on_temp_params_received",
-      (states, temperature) => {
-        temperatureValue = temperature;
-        paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
-        if (counterTemperature <= 30 && temperature !== 0) {
-          counterTemperature++;
-          saveTemperature(tempMeasureTime);
-        }
+  setGreenBtn("btnTemp");
+  setTimeout(stopTemperature, 31000);
+  let tempMeasureTime = getActualTime();
+  dataParser.registerCallback(
+    "on_temp_params_received",
+    (states, temperature) => {
+      temperatureValue = temperature;
+      paramTemperature.innerHTML = temperature === 0 ? "- -.-" : temperature;
+      if (!counterTemperature && temperature !== 0) {
+        counterTemperature = setInterval(
+          () => saveTemperature(tempMeasureTime),
+          1000
+        );
       }
-    );
-  }
+    }
+  );
 }
 
 setInterval(updateWaveforms, 40);
@@ -399,10 +383,12 @@ function saveTemperature(measureTime) {
     })
     .catch((err) => console.log("Error al enviar solicitud:", err));
 }
+function stopTemperature() {
+  clearInterval(counterTemperature);
+}
 
 function refreshBluetoothStatus(status) {
   txBluetoothStatus.innerHTML = status;
-  sessionStorage.setItem("bth-status", status.toString());
 }
 function updateWaveforms() {
   if (document.hidden) {
@@ -525,7 +511,7 @@ const fillPatientData = () => {
   divPatient.innerHTML = descryptData(data);
 };
 const descryptData = (data) => {
-  let dataPatient = "";
+  let dataPatient = ''
   if (data == null) {
     dataPatient = "-sin datos-";
   } else {
@@ -544,12 +530,11 @@ const descryptData = (data) => {
   return dataPatient;
 };
 
-const setColorBtn = (id) => {
+const setGreenBtn = (id) => {
   let boton = document.getElementById(id);
   boton.style.backgroundColor = "#00ABC8";
   setTimeout(function () {
     boton.style.backgroundColor = "";
-    sessionStorage.setItem(id, "deactive");
   }, 30000); // 30 segundos
 
   boton.style.backgroundPosition = "0% 100%"; // Cambiar la posición del gradiente hacia abajo
@@ -564,34 +549,26 @@ const setColorBorderBtn = (id, color) => {
 
 const getActualTime = () => {
   let date = new Date();
-  let options = {
-    timeZone: "America/Argentina/Buenos_Aires",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  };
+  let options = { timeZone: 'America/Argentina/Buenos_Aires', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
 
   // Formatear la fecha y hora según la zona horaria de Buenos Aires
-  let dateTimeFormat = new Intl.DateTimeFormat("en-GB", options);
+  let dateTimeFormat = new Intl.DateTimeFormat('en-GB', options);
   let formattedDateParts = dateTimeFormat.formatToParts(date);
 
   // Extraer las partes formateadas
-  let year = formattedDateParts.find((part) => part.type === "year").value;
-  let month = formattedDateParts.find((part) => part.type === "month").value;
-  let day = formattedDateParts.find((part) => part.type === "day").value;
-  let hours = formattedDateParts.find((part) => part.type === "hour").value;
-  let minutes = formattedDateParts.find((part) => part.type === "minute").value;
-  let seconds = formattedDateParts.find((part) => part.type === "second").value;
-  let horaMas3 = parseInt(hours);
-  horaMas3 += 3;
+  let year = formattedDateParts.find(part => part.type === 'year').value;
+  let month = formattedDateParts.find(part => part.type === 'month').value;
+  let day = formattedDateParts.find(part => part.type === 'day').value;
+  let hours = formattedDateParts.find(part => part.type === 'hour').value;
+  let minutes = formattedDateParts.find(part => part.type === 'minute').value;
+  let seconds = formattedDateParts.find(part => part.type === 'second').value;
+  let horaMas3 = parseInt(hours)
+  horaMas3 += 3
 
   let medicionTime = `${year}-${month}-${day} ${horaMas3}:${minutes}:${seconds}.000`;
   return medicionTime;
 };
+
 
 document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("message", e => {
@@ -599,9 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var url = new URL(e.data);
     baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
     console.log(baseUrl);
-
   });
-
   window.addEventListener("resize", fitButtons);
   fitButtons();
   fillPatientData();
@@ -618,6 +593,8 @@ document.addEventListener("DOMContentLoaded", () => {
     onBtnSpo2Click();
   });
   document.getElementById("btnTemp").addEventListener("click", () => {
+    stopTemperature();
     onBtnTemperatureClick();
   });
+
 });
