@@ -13,19 +13,23 @@
 
   <body>
     <div class="status-bar-container">
-      <div
-        class="bluetoothImage"
-        id="bluetoothImage"
-        onclick="onBtnSearchClick()"
-      >
-        <img class="setting-button" src="./images/bluetooth.png" />
+      <div  class="bluetooth-container">
+        <div
+          class="bluetoothImage"
+          id="bluetoothImage"
+          onclick="onBtnSearchClick()"
+        >
+          <img class="setting-button" src="./images/bluetooth.png" />
+        </div>
+        <div class="status-text">Bluetooth:</div>
+        <div id="bluetooth-status" class="status-text">Not Connect.</div>
       </div>
-      <div class="status-text">Bluetooth:</div>
-      <div id="bluetooth-status" class="status-text">Not Connect.</div>
-      <div id="patient" class="status-text"></div>
-      <p id="error-text" class="error-text">
-        Error: por favor intente de nuevo
-      </p>
+      <div class="info-container">
+        <div id="patient" class="status-text"></div>
+        <p id="error-text" class="error-text">
+          Error: por favor intente de nuevo
+        </p>
+      </div>
     </div>
     <div class="container">
       <div class="waveforms-container">
@@ -45,6 +49,7 @@
 
       <div class="parameters-container">
         <div class="parameter-box">
+          <img id="ecg-button-xs" class="setting-button-xs" src="./images/Ecg.png" />
           <span class="parameter-title ecg-color">HR(bpm)</span>
           <span class="parameter-value ecg-color" id="parameter-heart-rate"
             >- -</span
@@ -52,6 +57,7 @@
         </div>
 
         <div class="parameter-box">
+          <img id="nibp-button-xs" class="setting-button-xs" src="./images/nibp.png" />
           <span class="parameter-title nibp-color">NIBP(mmHg)</span>
           <span class="parameter-value nibp-color" id="parameter-nibp"
             >- - -/- -</span
@@ -59,13 +65,13 @@
         </div>
 
         <div class="parameter-box">
+          <img id="spo2-button-xs" class="setting-button-xs" src="./images/spO2.png" />
+          <span class="parameter-title spo2-color">SpO2(%)</span>
           <div class="parameter-subox">
-            <span class="parameter-title spo2-color">SpO2(%)</span>
             <span class="parameter-value spo2-color" id="parameter-spo2"
               >- -</span
             >
           </div>
-
           <div class="parameter-subox">
             <span class="parameter-title spo2-color">PR(bpm)</span>
             <span class="parameter-value spo2-color" id="parameter-pulse-rate"
@@ -75,6 +81,7 @@
         </div>
 
         <div class="parameter-box">
+          <img id="temp-button-xs" class="setting-button-xs" src="./images/tmp.png" />
           <span class="parameter-title temperature-color">Temp(°C)</span>
           <span
             class="parameter-value temperature-color"

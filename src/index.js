@@ -81,15 +81,14 @@ function onBtnSearchClick() {
   patientMonitor.connect();
 }
 
-function onBtnEcgClick() {
+function onBtnEcgClick(id) {
   if (
-    sessionStorage.getItem("btnEcg") !== "active" &&
+    sessionStorage.getItem(id) !== "active" &&
     sessionStorage.getItem("bth-status") == "Connected to BerryMed"
   ) {
-    setColorBtn("btnEcg");
-    sessionStorage.setItem("btnEcg", "active");
+    setColorBtn(id);
+    sessionStorage.setItem(id, "active");
     let ecgMeasureTime = getActualTime();
-    console.log("ecgBtn");
     let counterEcg = 0;
     let saveEcgDataExecuted = false;
 
@@ -546,6 +545,7 @@ const descryptData = (data) => {
 
 const setColorBtn = (id) => {
   let boton = document.getElementById(id);
+  console.log(boton);
   boton.style.backgroundColor = "#00ABC8";
   setTimeout(function () {
     boton.style.backgroundColor = "";
@@ -595,7 +595,6 @@ const getActualTime = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("message", e => {
-    // Extraer la parte deseada de la URL
     var url = new URL(e.data);
     baseUrl = url.origin + url.pathname.split('/').slice(0, 2).join('/');
     console.log(baseUrl);
@@ -607,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
   fillPatientData();
 
   document.getElementById("btnEcg").addEventListener("click", () => {
-    onBtnEcgClick();
+    onBtnEcgClick("btnEcg");
   });
 
   document.getElementById("btnNibp").addEventListener("click", () => {
@@ -619,5 +618,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("btnTemp").addEventListener("click", () => {
     onBtnTemperatureClick();
+  });
+
+  /*____________________MOVIL______________________*/
+  
+  document.getElementById("ecg-button-xs").addEventListener("click", () => {
+    onBtnEcgClick("ecg-button-xs");
+  });
+
+  document.getElementById("nibp-button-xs").addEventListener("click", () => {
+    onBtnNIBPClick("nibp-button-xs");
+  });
+
+  document.getElementById("spo2-button-xs").addEventListener("click", () => {
+    onBtnSpo2Click("spo2-button-xs");
+  });
+  document.getElementById("temp-button-xs").addEventListener("click", () => {
+    onBtnTemperatureClick("temp-button-xs");
   });
 });
